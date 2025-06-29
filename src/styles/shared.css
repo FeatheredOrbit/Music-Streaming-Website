@@ -1,0 +1,142 @@
+:root {
+    --window-width: auto;
+    --window-height: auto;
+
+    --post-intro-opacity: 0;
+}
+
+.intro {
+    width: var(--window-width);
+    height: var(--window-height);
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    position: fixed;
+    z-index: 5;
+    pointer-events: none;
+    top: 0px;
+    left: 0px;
+}
+
+.intro-shadow {
+    opacity: 0.25;
+}
+
+.button-pillar {
+    position: fixed;
+    z-index: 3;
+    top: 0px;
+    left: 0px;
+
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    width: var(--window-width);
+    height: calc(var(--window-height) * 0.3);
+}
+
+.pillars {
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    width: calc(var(--window-width) * 0.09);
+    height: var(--window-height);
+
+    z-index: 2;
+
+    position: absolute;
+
+    top: 0px;
+    transform: translate(-50%);
+}
+
+.pillar-left {
+    left: 30%;
+}
+
+.pillar-right {
+    left: 70%;
+}
+
+.light-base {
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    opacity: var(--post-intro-opacity);
+
+    position: fixed;
+
+
+    z-index: 6;
+
+    width: calc(var(--window-width) * 0.12);
+    height: calc(var(--window-height) * 0.135);
+}
+
+.light-base-left {
+    top: 0px;
+    left: 0px;
+
+}
+
+.light-base-right {
+    top: 0px;
+    left: 100%;
+    transform: translate(-100%);
+}
+
+.background {
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    z-index: 1;
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+
+    width: var(--window-width);
+    height: var(--window-height);
+}
+
+.button {
+    width: calc(var(--window-width) * 0.05);
+    height: calc(var(--window-height) * 0.05);
+
+    z-index: 4;
+
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    position: fixed;
+
+}
+
+.home-button {
+    top: 25.5%;
+    left: 50%;
+
+    transform: translate(-150%, -50%);
+}
+
+.account-button {
+    top: 18%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+.home-button:hover {
+    content: url(../../assets/shared/buttons/home/hover.png);
+}
+
+.account-button:hover {
+    content: url(../../assets/shared/buttons/account/hover.png);
+}
+
+.cell {
+    position: absolute;
+    top: 50%;
+    left: 50;
+    z-index: 10;
+}
