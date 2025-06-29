@@ -8,10 +8,7 @@
 
     <title>Super cool sigma ligma website</title>
 
-    
-
-    <link rel="preload" href="assets/shared/foreground/intro.gif" as="image" type="image/gif">
-    <link rel="preload" href="assets/shared/foreground/intro_shadowless.gif" as="image" type="image/gif">
+    <link rel="icon" href="assets/shared/icons/main.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="src/styles/shared.css">
     <link rel="stylesheet" href="src/styles/home.css">
@@ -29,29 +26,37 @@
 
     <div class="container" id="song-grid"></div>
 
-    <img class="intro intro-shadow" src="assets/shared/foreground/intro.gif">
-    <img class="intro" src="assets/shared/foreground/intro_shadowless.gif">
-
+    <img class="intro intro-shadow" id="intro">
+    <img class="intro" id="intro-shadowless">
     <img id="intro_reversed" class="intro intro-shadow">
     <img id="intro-shadowless_reversed" class="intro">
 
     <img class="button-pillar" src="assets/shared//foreground/button_pillar_shadowless.png">
-
     <img class="background" src="assets/shared/background/background.png">
-
     <img class="pillars pillar-left" src="assets/shared/background/actual_pillar.png">
     <img class="pillars pillar-right" src="assets/shared/background/actual_pillar.png">
 
     <img class="button home-button" id="home-button" title="Home" src="assets/shared/buttons/home/default.png">
-
-    <img class="button account-button" id="account-button" title="Click to set up account"
-        src="assets/shared/buttons/account/default.png">
+    <img class="button account-button" id="account-button" title="Click to set up account" src="assets/shared/buttons/account/default.png">
 
     <script>
-        window.addEventListener("DOMContentLoaded", function () { document.body.style.visibility = "visible" })
+        const intro = document.getElementById("intro");
+        const intro_shadowless = document.getElementById("intro-shadowless");
+
+        intro.offsetHeight;
+        intro_shadowless.offsetHeight;
+
+        intro.src = "assets/shared/foreground/intro.gif?t=" + Date.now();
+        intro_shadowless.src = "assets/shared/foreground/intro_shadowless.gif?t=" + Date.now();
+
+        window.addEventListener("DOMContentLoaded", function() {
+            // Avoids page flickering before the style sheet is loaded
+            document.body.style.visibility = "visible";
+        });
     </script>
 
     <script src="src/scripts/shared.js"></script>
+    <script type="module" src="src/components/main.jsx"></script>
 
 </body>
 

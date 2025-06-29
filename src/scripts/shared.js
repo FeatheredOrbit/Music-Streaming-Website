@@ -10,9 +10,6 @@ function pageChange() {
     const intro = document.getElementById("intro_reversed");
     const intro_shadowless = document.getElementById("intro-shadowless_reversed");
 
-    intro.src = "";
-    intro_shadowless.src = "";
-
     intro.offsetHeight;
     intro_shadowless.offsetHeight; 
     
@@ -38,6 +35,18 @@ function accountClick() {
 
 
 windowResize();
+
+window.addEventListener("DOMContentLoaded", function() {
+    const intro = document.getElementById("intro");
+    const intro_shadowless = document.getElementById("intro-shadowless");
+
+    intro.offsetHeight;
+    intro_shadowless.offsetHeight;
+
+    intro.src = "assets/shared/foreground/intro.gif?t=" + Date.now();
+    intro_shadowless.src = "assets/shared/foreground/intro_shadowless.gif?t=" + Date.now();
+});
+
 
 window.addEventListener("resize", windowResize);
 
