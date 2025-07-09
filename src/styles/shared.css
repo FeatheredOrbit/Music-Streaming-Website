@@ -58,33 +58,6 @@
     left: 70%;
 }
 
-.light-base {
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
-
-    opacity: var(--post-intro-opacity);
-
-    position: fixed;
-
-
-    z-index: 6;
-
-    width: calc(var(--window-width) * 0.12);
-    height: calc(var(--window-height) * 0.135);
-}
-
-.light-base-left {
-    top: 0px;
-    left: 0px;
-
-}
-
-.light-base-right {
-    top: 0px;
-    left: 100%;
-    transform: translate(-100%);
-}
-
 .background {
     image-rendering: crisp-edges;
     image-rendering: pixelated;
@@ -108,15 +81,19 @@
     image-rendering: crisp-edges;
     image-rendering: pixelated;
 
+    transition: width, height;
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(.21,.94,.59,2.33);
+
     position: fixed;
 
 }
 
 .home-button {
     top: 25.5%;
-    left: 50%;
+    left: 45%;
 
-    transform: translate(-150%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 .account-button {
@@ -128,10 +105,16 @@
 
 .home-button:hover {
     content: url(../../assets/shared/buttons/home/hover.png);
+
+    width: calc(var(--window-width) * 0.06);
+    height: calc(var(--window-height) * 0.06);
 }
 
 .account-button:hover {
     content: url(../../assets/shared/buttons/account/hover.png);
+
+    width: calc(var(--window-width) * 0.06);
+    height: calc(var(--window-height) * 0.06);
 }
 
 .cell {

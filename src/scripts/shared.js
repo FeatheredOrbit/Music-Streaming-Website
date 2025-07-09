@@ -1,4 +1,4 @@
-function windowResize() {
+function windowResize() { 
     document.documentElement.style.setProperty("--window-width", window.innerWidth + "px");
     document.documentElement.style.setProperty("--window-height", window.innerHeight + "px");
 
@@ -29,7 +29,7 @@ function accountClick() {
     pageChange();
 
     setTimeout(function() {
-        window.location = "signin-login.html"
+        window.location = "pages/signin-login.html"
     }, 2000)
 }
 

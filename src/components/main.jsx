@@ -1,5 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import Cell from "./cell.jsx";
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './app';
+import "../styles/shared.css";
 
-ReactDOM.createRoot(document.getElementById("song-grid")).render(<Cell />);
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
