@@ -6,16 +6,13 @@
 }
 
 .intro {
-    width: 100vw;
-    height: 100vh;
+    width: var(--window-width);
+    height: var(--window-height);
 
     overflow: hidden;
 
     image-rendering: crisp-edges;
     image-rendering: pixelated;
-
-
-    object-fit: contain;
 
     position: fixed;
     z-index: 5;
