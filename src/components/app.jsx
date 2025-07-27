@@ -3,9 +3,14 @@ import { useEffect, useRef } from 'react';
 import * as React from 'react';
 import Home from './pages/home';
 import Signup from './pages/signup';
+import Login from './pages/login';
 
 export default function App() {
   const navigate = useNavigate();
+
+  const [transitioning, setTransitioning] = React.useState(false);
+
+  const introDelay = 30;
 
   const intro = ["assets/shared/foreground/intro/intro-0.png",
     "assets/shared/foreground/intro/intro-1.png",
@@ -47,7 +52,6 @@ export default function App() {
   function playIntro(reverse) {
     const max = 14;
     const min = 0;
-    const delay = 100;
 
     
     if (reverse) {
@@ -61,7 +65,7 @@ export default function App() {
             introShadowlessRef.current.src = introShadowless[i];
           }
 
-        } , delay * (max - i));
+        } , introDelay * (max - i));
       }
     } else {
       for (let i = min; i <= max; i++) {
@@ -74,7 +78,7 @@ export default function App() {
             introShadowlessRef.current.src = introShadowless[i];
           }
 
-        } , delay * i);
+        } , introDelay * i);
       }
     }
     
@@ -84,19 +88,27 @@ export default function App() {
   }
 
   function onNavigate(route) {
-    if (location.pathname === route) {
+    if (location.pathname === route || transitioning) {
       return;
     }
+
+    setTransitioning(true);
 
     playIntro(true);
 
     setTimeout(function() {
       navigate(route);
       playIntro(false);
-    }, 2000);
+    }, 550);
+
+    setTimeout(function() {
+      setTransitioning(false);
+    }, introDelay * 30);
   }
 
-  playIntro(false);
+  useEffect(function() {
+    playIntro(false);
+  }, []);
 
   return (
 
@@ -109,8 +121,9 @@ export default function App() {
       
 
         <Routes>
-          <Route path="/" element={<Home onNavigate={ onNavigate } />} />
-          <Route path="/signup" element={<Signup onNavigate={ onNavigate } />} />
+          <Route path="/" element={<Home onNavigate={ onNavigate } transitioning={ transitioning } />} />
+          <Route path="/signup" element={<Signup onNavigate={ onNavigate } transitioning={ transitioning } />} />
+          <Route path="/login" element={<Login onNavigate={ onNavigate} transitioning={ transitioning } />} />
         </Routes>
 
     </>

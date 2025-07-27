@@ -3,7 +3,7 @@ import * as Router from "react-router-dom";
 import useWindowResize from "../utils/useWindowResize";
 import "../../styles/signup.css";
 
-export default function Signup({ onNavigate, transitioning }) {
+export default function Login({ onNavigate, transitioning }) {
     useWindowResize();
 
     function signUp(username, password, confirmPassword) {
@@ -40,7 +40,7 @@ export default function Signup({ onNavigate, transitioning }) {
 
             <p className="move-to-login"> 
                 Have an account already? 
-                <span style={{fontWeight: "bold", color: "blue" }} onClick={function() { if (!transitioning) {  onNavigate("/login")}}}> 
+                <span style={{fontWeight: "bold"}} onClick={function() { if (!transitioning) {  onNavigate("/login")}}}> 
                     Click here. 
                 </span> 
             </p>
