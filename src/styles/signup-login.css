@@ -1,0 +1,57 @@
+.root {
+    --window-width: auto;
+    --window-height: auto;
+}
+
+.login-signup-container {
+    position: absolute;
+    top: 0%;
+    left: 50%;
+
+    aspect-ratio: 4 / 3;
+
+    transform: translateX(-50%);
+
+    z-index: 3;
+
+    width: 50%;
+    height: 65%;
+
+}
+
+.login-signup-pillar {
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    inset: 0;
+
+    display: block;
+}
+
+.login-signup-content {
+    position: absolute;
+    display: grid;
+
+    height: 100%;
+
+    inset: 0;
+
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+}
+
+.move-to-login{
+    z-index: 50;
+
+    grid-column: 3 / 4;
+    grid-row: 4 / 5;
+
+    text-align: left;
+
+    font-size: calc(0.75vh + 0.75vw);
+}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Router from "react-router-dom";
 import useWindowResize from "../utils/useWindowResize";
-import "../../styles/signup.css";
+import "../../styles/signup-login.css";
 
 export default function Login({ onNavigate, transitioning }) {
     useWindowResize();
