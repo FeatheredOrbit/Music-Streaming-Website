@@ -76,8 +76,6 @@
 }
 
 .button {
-    width: calc(var(--window-width) * 0.05);
-    height: calc(var(--window-height) * 0.05);
 
     z-index: 4;
 
@@ -88,13 +86,16 @@
     transition-duration: 0.3s;
     transition-timing-function: cubic-bezier(.21,.94,.59,2.33);
 
-    position: fixed;
-
 }
 
 .home-button {
     top: 25.5%;
     left: 45%;
+
+    position: fixed;
+
+    width: calc(var(--window-width) * 0.05);
+    height: calc(var(--window-height) * 0.05);
 
     transform: translate(-50%, -50%);
 }
@@ -103,18 +104,23 @@
     top: 18%;
     left: 50%;
 
+    position: fixed;
+
+    width: calc(var(--window-width) * 0.05);
+    height: calc(var(--window-height) * 0.05);
+
     transform: translate(-50%, -50%);
 }
 
 .home-button:hover {
-    content: url(../../assets/shared/buttons/home/hover.png);
+    content: url(assets/shared/buttons/home/hover.png);
 
     width: calc(var(--window-width) * 0.06);
     height: calc(var(--window-height) * 0.06);
 }
 
 .account-button:hover {
-    content: url(../../assets/shared/buttons/account/hover.png);
+    content: url(assets/shared/buttons/account/hover.png);
 
     width: calc(var(--window-width) * 0.06);
     height: calc(var(--window-height) * 0.06);

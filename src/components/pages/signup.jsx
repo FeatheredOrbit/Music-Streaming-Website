@@ -1,19 +1,23 @@
 import * as React from "react";
-import * as Router from "react-router-dom";
 import useWindowResize from "../utils/useWindowResize";
 import "../../styles/signup-login.css";
 
 export default function Signup({ onNavigate, transitioning }) {
     useWindowResize();
 
-    function signUp(username, password, confirmPassword) {
+    const [username, setUsername] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [conPassword, setConPassword] = React.useState("");
+
+    function signUp() {
         fetch("back-end/scripts/login-signup/signup.php", 
             {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/x-www-form-urlencoded"
                 },
-                body: 'username=${encodeURIcomponent(username)}&password=${encodeURIcomponent(password)}&conPassword=${encodeURIcomponent(confirmPassword)}'
+                body: 'username=${encodeURIcomponent(username)}&password=${encodeURIcomponent(password)}&conPassword=${encodeURIcomponent(conPassword)}'
             }
         )
         .then(res => res.json())
@@ -36,6 +40,15 @@ export default function Signup({ onNavigate, transitioning }) {
                 <img className="login-signup-pillar" src="assets/shared/foreground/login_signup_pillar.png" />
 
                 <div className="login-signup-content">
+
+                    <p className="filling-text"> Create an account </p>
+
+                    <input type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}}  />
+                    <input type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}}  />
+                    <input type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}} />
+                    <input type="password" className="con-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}} />
+
+                    <img src="assets/shared/buttons/next/default.png" className="button next-button" />
 
                     <p className="move-to-login"> 
 
