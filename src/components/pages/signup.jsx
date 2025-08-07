@@ -37,35 +37,34 @@ export default function Signup({ onNavigate, transitioning }) {
 
             <div className="login-signup-container">
 
-                <img className="login-signup-pillar" src="assets/shared/foreground/login_signup_pillar.png" />
-
+                <img className="chain" src="assets/shared/foreground/chain.png" />
+                <img className="base" src="assets/shared/foreground/base.png" />
+                
                 <div className="login-signup-content">
 
                     <p className="filling-text"> Create an account </p>
 
                     <input type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}}  />
                     <input type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}}  />
-                    <input type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}} />
-                    <input type="password" className="con-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}} />
+                    <input type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}}  />
+                    <input type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}}  />
 
-                    <img src="assets/shared/buttons/next/default.png" className="button next-button" />
+                    <img className="next-button" src="assets/shared/buttons/next/default.png" />
 
-                    <p className="move-to-login"> 
-
-                        Have an account already? {""}  
-
-                        <span style={{fontWeight: "bold", color: "blue" }} onClick={function() { if (!transitioning) {  onNavigate("/login")}}}> 
-
-                            Click here. 
-
-                        </span> 
+                    <p className="move-to-login"> Already have an account? {"\n"} 
+                        <span style={{color: "Red", textDecoration: "Underline", fontWeight: "Bold"}} onClick={function() {if (!transitioning) {onNavigate("/login")}}}>
+                            Click here.
+                        </span>
                     </p>
+                    
 
                 </div>
 
             </div>
 
             <img className="background" src="assets/shared/background/background.png" />
+
+            <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" />
 
             <img className="pillars pillar-left" src="assets/shared/background/actual_pillar.png" />
             <img className="pillars pillar-right" src="assets/shared/background/actual_pillar.png" />
