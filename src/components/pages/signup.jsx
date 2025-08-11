@@ -6,11 +6,13 @@ export default function Signup({ onNavigate, transitioning }) {
     useWindowResize();
 
     const [username, setUsername] = React.useState("");
+    const [usernameTaken, setUsernameTaken] = React.useState(false);
+
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [conPassword, setConPassword] = React.useState("");
 
-    function signUp() {
+    async function signUp() {
         fetch("back-end/scripts/login-signup/signup.php", 
             {
                 method: "POST",
@@ -29,6 +31,19 @@ export default function Signup({ onNavigate, transitioning }) {
         });
 
         
+    }
+
+    async function validateUsername() {
+        fetch('/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username)}')
+        .then(res => res.json)
+        .then(data => {
+            if (data.usernameExists) {
+                setUsernameTaken(true);
+                
+            } else {
+                setUsernameTaken(false);
+            }
+        })
     }
 
 

@@ -4,7 +4,10 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    include_once "../config.php";
+    $servername = "localhost";
+    $username = "user";
+    $password = "password";
+    $dbname = "musicDB";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 

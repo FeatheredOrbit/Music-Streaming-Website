@@ -107,6 +107,12 @@ export default function App() {
   }
 
   useEffect(function() {
+    fetch("api/Website/back-end/database-initiation/init.php")
+    .then(response => response.text())
+    .then(data => {
+      console.log("init.php: ", data);
+    });
+
     playIntro(false);
   }, []);
 
