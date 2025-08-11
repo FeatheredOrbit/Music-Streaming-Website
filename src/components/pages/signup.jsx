@@ -9,20 +9,23 @@ export default function Signup({ onNavigate, transitioning }) {
     const [usernameTaken, setUsernameTaken] = React.useState(false);
 
     const [email, setEmail] = React.useState("");
+    const [emailTaken, setEmailTaken] = React.useState(false);
+
     const [password, setPassword] = React.useState("");
     const [conPassword, setConPassword] = React.useState("");
 
     async function signUp() {
-        fetch("back-end/scripts/login-signup/signup.php", 
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type" : "application/x-www-form-urlencoded"
-                },
-                body: 'username=${encodeURIcomponent(username)}&password=${encodeURIcomponent(password)}&conPassword=${encodeURIcomponent(conPassword)}'
-            }
-        )
-        .then(res => res.json())
+        fetch("api/Website/back-end/scripts/login-signup/signup.php", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+
+            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&conPassword=${encodeURIComponent(conPassword)}`
+
+            })
+        .then(res => res.text())
         .then(data => {
             console.log("Server response:", data);
         })
@@ -34,15 +37,38 @@ export default function Signup({ onNavigate, transitioning }) {
     }
 
     async function validateUsername() {
-        fetch('/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username)}')
+        fetch('api/Website/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username)}')
         .then(res => res.json)
         .then(data => {
             if (data.usernameExists) {
                 setUsernameTaken(true);
+                console.log("Username taken");
                 
             } else {
                 setUsernameTaken(false);
+                console.log("Username NOT taken");
             }
+        })
+        .catch(error => {
+            console.log("Error during validation: ", error);
+        })
+    }
+
+    async function validateEmail() {
+        fetch('api/Website/back-end/scripts/login-signup/validate-info/email.php?email=${encodeURIComponent(email)}')
+        .then(res => res.json)
+        .then(data => {
+            if (data.emailExists) {
+                setEmailTaken(true);
+                console.log("Email taken");
+                
+            } else {
+                setEmailTaken(false);
+                console.log("Email NOT taken");
+            }
+        })
+        .catch(error => {
+            console.log("Error during validation: ", error);
         })
     }
 
@@ -59,12 +85,12 @@ export default function Signup({ onNavigate, transitioning }) {
 
                     <p className="filling-text"> Create an account </p>
 
-                    <input type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}}  />
-                    <input type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}}  />
+                    <input type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}} onBlur={function() { validateUsername() }} />
+                    <input type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}} onBlur={function() { validateEmail() }} />
                     <input type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}}  />
                     <input type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}}  />
 
-                    <img className="next-button" src="assets/shared/buttons/next/default.png" />
+                    <img className="next-button" src="assets/shared/buttons/next/default.png" onClick={function() {signUp()}} />
 
                     <p className="move-to-login"> Already have an account? {"\n"} 
                         <span style={{color: "Red", textDecoration: "Underline", fontWeight: "Bold"}} onClick={function() {if (!transitioning) {onNavigate("/login")}}}>
