@@ -2,18 +2,27 @@ import * as React from "react";
 import useWindowResize from "../utils/useWindowResize";
 import "../../styles/signup-login.css";
 
+
 export default function Signup({ onNavigate, transitioning }) {
     useWindowResize();
 
-    const [username, setUsername] = React.useState("");
-    const [usernameTaken, setUsernameTaken] = React.useState(false);
+    const [username, setUsername] = React.useState(""); // Actual username
+    const [usernameTaken, setUsernameTaken] = React.useState(false); // If the username is already in the database
+    const [usernameValid, setUsernameValid] = React.useState(false); // If the username is within length limits
 
-    const [email, setEmail] = React.useState("");
-    const [emailTaken, setEmailTaken] = React.useState(false);
+    const [email, setEmail] = React.useState(""); // Actual email
+    const [emailTaken, setEmailTaken] = React.useState(false); // If the email is already in the database
+    const [emailValid, setEmailValid] = React.useState(false); // If the email follows correct email format
 
-    const [password, setPassword] = React.useState("");
-    const [conPassword, setConPassword] = React.useState("");
+    const [password, setPassword] = React.useState(""); // Actual password
+    const [passwordValid, setPasswordValid] = React.useState(false); // If the password falls within length limits
 
+    const [conPassword, setConPassword] = React.useState(""); // Confirmation password
+    const [conPasswordValid, setConPasswordValid] = React.useState(false); // If the confirm password matches the password
+
+    // Custom parameter for the button (stands for disabled, I couldn't be bothered adapting it to a button tag)
+    var dis = usernameTaken || !usernameValid || emailTaken || !emailValid || !passwordValid ||  !conPasswordValid;
+    
     async function signUp() {
         fetch("api/Website/back-end/scripts/login-signup/signup.php", {
             method: "POST",
@@ -37,40 +46,86 @@ export default function Signup({ onNavigate, transitioning }) {
     }
 
     async function validateUsername() {
-        fetch('api/Website/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username)}')
-        .then(res => res.json)
-        .then(data => {
-            if (data.usernameExists) {
-                setUsernameTaken(true);
-                console.log("Username taken");
+        if (username.trim().length <= 100 && username.trim().length > 0) {
+            setUsernameValid(true);
+
+            fetch(`api/Website/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username.trim())}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.usernameExists) {
+                    setUsernameTaken(true);
+                    console.log("Username taken");
                 
-            } else {
-                setUsernameTaken(false);
-                console.log("Username NOT taken");
-            }
-        })
-        .catch(error => {
-            console.log("Error during validation: ", error);
-        })
+                } else {
+                    setUsernameTaken(false);
+                    console.log("Username NOT taken");
+                }
+            })
+            .catch(error => {
+                console.log("Error during validation: ", error);
+            })
+
+        } else {
+            setUsernameValid(false);
+        }
     }
 
     async function validateEmail() {
-        fetch('api/Website/back-end/scripts/login-signup/validate-info/email.php?email=${encodeURIComponent(email)}')
-        .then(res => res.json)
-        .then(data => {
-            if (data.emailExists) {
-                setEmailTaken(true);
-                console.log("Email taken");
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (re.test(email.trim()) === true) {
+            setEmailValid(true);
+
+            fetch(`api/Website/back-end/scripts/login-signup/validate-info/email.php?email=${encodeURIComponent(email.trim())}`) 
+            .then(res => res.json())
+            .then(data => {
+                if (data.emailExists) {
+                    setEmailTaken(true);
+                    console.log("Email taken");
                 
-            } else {
-                setEmailTaken(false);
-                console.log("Email NOT taken");
-            }
-        })
-        .catch(error => {
-            console.log("Error during validation: ", error);
-        })
+                } else {
+                    setEmailTaken(false);
+                    console.log("Email NOT taken");
+                }
+            })
+            .catch(error => {
+                console.log("Error during validation: ", error);
+            })
+
+        } else {
+            setEmailValid(false);
+        }
+
+        console.log(re.test(email.trim()));
     }
+
+    async function validatePassword() {
+        if (password.trim().length >= 8 && password.trim().length <= 100) {
+            setPasswordValid(true);
+        } else {
+            setPasswordValid(false);
+        }
+    }
+
+    async function validateConPassword() {
+        if (conPassword.trim() === password.trim()) {
+            setConPasswordValid(true);
+        } else {
+            setConPasswordValid(false);
+        }
+    }
+
+    // Calls validation functions every 6 seconds for added functionality
+    React.useEffect(function() {
+        const interval = setInterval(function() {
+            validateUsername();
+            validateEmail();
+            validatePassword();
+            validateConPassword();
+        }, 6000);
+
+        return() => {clearInterval(interval);};
+    });
 
 
     return (
@@ -85,12 +140,14 @@ export default function Signup({ onNavigate, transitioning }) {
 
                     <p className="filling-text"> Create an account </p>
 
-                    <input type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}} onBlur={function() { validateUsername() }} />
-                    <input type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}} onBlur={function() { validateEmail() }} />
-                    <input type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}}  />
-                    <input type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}}  />
+                    <input maxLength={100} type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}} onBlur={function() { validateUsername() }} />
+                    <input maxLength={100} type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}} onBlur={function() { validateEmail() }} />
+                    <input maxLength={128} type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}} onBlur={function() { validatePassword()}}  />
+                    <input maxLength={128} type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}} onBlur={function() { validateConPassword()}}  />
 
-                    <img className="next-button" src="assets/shared/buttons/next/default.png" onClick={function() {signUp()}} />
+                    <img className="next-button" src="assets/shared/buttons/next/default.png" onClick={function() { if(!dis) {signUp()}}}
+                        dis={dis.toString()}
+                    />
 
                     <p className="move-to-login"> Already have an account? {"\n"} 
                         <span style={{color: "Red", textDecoration: "Underline", fontWeight: "Bold"}} onClick={function() {if (!transitioning) {onNavigate("/login")}}}>

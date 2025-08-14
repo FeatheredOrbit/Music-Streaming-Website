@@ -174,8 +174,12 @@ input:focus {
     image-rendering: pixelated;
 }
 
-.next-button:hover {
+.next-button[dis = "false"]:hover {
     content: url(assets/shared/buttons/next/hover.png);
+}
+
+.next-button[dis = "true"] {
+    filter: grayscale(100%);
 }
 
 

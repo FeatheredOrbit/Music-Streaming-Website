@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
         userID INT PRIMARY KEY AUTO_INCREMENT,
         username VARCHAR(100) NOT NULL UNIQUE,
         email VARCHAR(100) NOT NULL UNIQUE,
-        encryptedPassword VARCHAR(100) NOT NULL,
+        encryptedPassword VARCHAR(255) NOT NULL,
         dateJoined DATE NOT NULL
     );
     
