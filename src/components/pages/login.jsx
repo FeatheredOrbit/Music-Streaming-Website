@@ -1,11 +1,8 @@
 import * as React from "react";
 import * as Router from "react-router-dom";
-import useWindowResize from "../utils/useWindowResize";
 import "../../styles/signup-login.css";
 
 export default function Login({ onNavigate, transitioning }) {
-    useWindowResize();
-
     function signUp(username, password, confirmPassword) {
         fetch("back-end/scripts/login-signup/signup.php", 
             {

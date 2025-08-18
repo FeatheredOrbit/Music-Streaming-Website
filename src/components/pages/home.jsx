@@ -1,11 +1,8 @@
 import * as React from "react";
 import * as Router from "react-router-dom";
-import useWindowResize from "../utils/useWindowResize";
 import "../../styles/home.css";
 
 export default function Home({ onNavigate, transitioning }) {
-    useWindowResize();
-
     return (
         <div>
             <div className="container" id="song-grid" />

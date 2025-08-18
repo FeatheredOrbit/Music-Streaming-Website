@@ -1,27 +1,38 @@
 import * as React from "react";
-import useWindowResize from "../utils/useWindowResize";
+import Feedback from "../extra/feedback";
 import "../../styles/signup-login.css";
 
 
 export default function Signup({ onNavigate, transitioning }) {
-    useWindowResize();
 
-    const [username, setUsername] = React.useState(""); // Actual username
-    const [usernameTaken, setUsernameTaken] = React.useState(false); // If the username is already in the database
-    const [usernameValid, setUsernameValid] = React.useState(false); // If the username is within length limits
+    const [username, setUsername] = React.useState({
+        value: "",
+        valid: false,
+        taken: false,
+        empty: false
+    });
 
-    const [email, setEmail] = React.useState(""); // Actual email
-    const [emailTaken, setEmailTaken] = React.useState(false); // If the email is already in the database
-    const [emailValid, setEmailValid] = React.useState(false); // If the email follows correct email format
+    const [email, setEmail] = React.useState({
+        value: "",
+        valid: false,
+        taken: false,
+        empty: false
+    });
 
-    const [password, setPassword] = React.useState(""); // Actual password
-    const [passwordValid, setPasswordValid] = React.useState(false); // If the password falls within length limits
+    const [password, setPassword] = React.useState({
+        value: "",
+        valid: false,
+        empty: false
+    }); 
 
-    const [conPassword, setConPassword] = React.useState(""); // Confirmation password
-    const [conPasswordValid, setConPasswordValid] = React.useState(false); // If the confirm password matches the password
+    const [conPassword, setConPassword] = React.useState({
+        value: "",
+        valid: false,
+        empty: false
+    });
 
     // Custom parameter for the button (stands for disabled, I couldn't be bothered adapting it to a button tag)
-    var dis = usernameTaken || !usernameValid || emailTaken || !emailValid || !passwordValid ||  !conPasswordValid;
+    var dis = username.taken || !username.valid || email.taken || !email.valid || !password.valid ||  !conPassword.valid;
     
     async function signUp() {
         fetch("api/Website/back-end/scripts/login-signup/signup.php", {
@@ -31,12 +42,39 @@ export default function Signup({ onNavigate, transitioning }) {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
 
-            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&conPassword=${encodeURIComponent(conPassword)}`
+            body: `username=${encodeURIComponent(username.value)}&email=${encodeURIComponent(email.value)}&password=${encodeURIComponent(password.value)}&conPassword=${encodeURIComponent(conPassword.value)}`
 
             })
-        .then(res => res.text())
+        .then(res => res.json())
         .then(data => {
-            console.log("Server response:", data);
+            if (data.nullParameters) {
+                console.log("One or more inputs were null");
+            }
+            if (data.usernameInvalid) {
+                setUsername(prev => ({...prev, valid: false }));
+            }
+            if (data.usernameExists) {
+                setUsername(prev => ({...prev, taken: true }));
+            }
+            if (data.emailInvalid) {
+                setEmail(prev => ({...prev, valid: false}));
+            }
+            if (data.emailExists) {
+                setEmail(prev => ({...prev, taken: true}));
+            }
+            if (data.passwordInvalid) {
+                setPassword(prev => ({...prev, valid: false}));
+            }
+            if (data.conPasswordInvalid) {
+                setConPasswordValid(prev => ({...prev, valid: false}));
+            }
+
+            if (data.signupSuccessful) {
+                console.log("Successfully signed up");
+            } 
+            if (data.error) {
+                console.log ("Error: ", data.error);
+            }
         })
         .catch(error => {
             console.error("Error during signup:", error);
@@ -46,87 +84,55 @@ export default function Signup({ onNavigate, transitioning }) {
     }
 
     async function validateUsername() {
-        if (username.trim().length <= 100 && username.trim().length > 0) {
-            setUsernameValid(true);
+        let valid = username.value.trim().length > 0 && username.value.trim().length <= 100;
 
-            fetch(`api/Website/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username.trim())}`)
+        if (valid) {
+            fetch(`api/Website/back-end/scripts/login-signup/validate-info/username.php?username=${encodeURIComponent(username.value.trim())}`)
             .then(res => res.json())
             .then(data => {
-                if (data.usernameExists) {
-                    setUsernameTaken(true);
-                    console.log("Username taken");
-                
-                } else {
-                    setUsernameTaken(false);
-                    console.log("Username NOT taken");
-                }
+                setUsername(prev => ({...prev, valid: valid, taken: data.usernameExists, empty: username.value.trim() === ""}));
             })
             .catch(error => {
                 console.log("Error during validation: ", error);
             })
-
-        } else {
-            setUsernameValid(false);
         }
+
     }
 
     async function validateEmail() {
-        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) && email.value.trim().length > 0 && email.value.trim().length <= 320;
 
-        if (re.test(email.trim()) === true) {
-            setEmailValid(true);
-
-            fetch(`api/Website/back-end/scripts/login-signup/validate-info/email.php?email=${encodeURIComponent(email.trim())}`) 
+        if (valid) {
+            fetch(`api/Website/back-end/scripts/login-signup/validate-info/email.php?email=${encodeURIComponent(email.value.trim())}`) 
             .then(res => res.json())
             .then(data => {
-                if (data.emailExists) {
-                    setEmailTaken(true);
-                    console.log("Email taken");
-                
-                } else {
-                    setEmailTaken(false);
-                    console.log("Email NOT taken");
-                }
+                setEmail(prev => ({...prev, valid: valid, empty: email.value.trim() === "", taken: data.emailExists}));
             })
             .catch(error => {
                 console.log("Error during validation: ", error);
             })
-
-        } else {
-            setEmailValid(false);
         }
-
-        console.log(re.test(email.trim()));
     }
 
     async function validatePassword() {
-        if (password.trim().length >= 8 && password.trim().length <= 100) {
-            setPasswordValid(true);
-        } else {
-            setPasswordValid(false);
-        }
+        setPassword(prev => ({...prev, valid: password.value.length >= 8 && password.value.length <= 100 && !password.value.includes(" "), empty: password.value.trim() === 0}));
     }
 
     async function validateConPassword() {
-        if (conPassword.trim() === password.trim()) {
-            setConPasswordValid(true);
-        } else {
-            setConPasswordValid(false);
-        }
+        setConPassword(prev => ({...prev, valid: conPassword.value === password.value && password.valid, empty: conPassword.value.trim() === ""}));
     }
 
-    // Calls validation functions every 6 seconds for added functionality
+    // Calls validation functions every 2.5 seconds for added functionality
     React.useEffect(function() {
         const interval = setInterval(function() {
             validateUsername();
             validateEmail();
             validatePassword();
             validateConPassword();
-        }, 6000);
+        }, 2500);
 
         return() => {clearInterval(interval);};
     });
-
 
     return (
         <div>
@@ -140,10 +146,10 @@ export default function Signup({ onNavigate, transitioning }) {
 
                     <p className="filling-text"> Create an account </p>
 
-                    <input maxLength={100} type="text" className="username-input" placeholder="Username" value={ username } onChange={function(e) {setUsername(e.target.value)}} onBlur={function() { validateUsername() }} />
-                    <input maxLength={100} type="text" className="email-input" placeholder="Email" value={ email } onChange={function(e) {setEmail(e.target.value)}} onBlur={function() { validateEmail() }} />
-                    <input maxLength={128} type="password" className="password-input" placeholder="Password" value={ password } onChange={function(e) {setPassword(e.target.value)}} onBlur={function() { validatePassword()}}  />
-                    <input maxLength={128} type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword } onChange={function(e) {setConPassword(e.target.value)}} onBlur={function() { validateConPassword()}}  />
+                    <input maxLength={100} type="text" className="username-input" placeholder="Username" value={ username.value } onChange={function(e) {setUsername(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validateUsername() }} />
+                    <input maxLength={320} type="text" className="email-input" placeholder="Email" value={ email.value } onChange={function(e) {setEmail(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validateEmail() }} />
+                    <input maxLength={128} type="password" className="password-input" placeholder="Password" value={ password.value } onChange={function(e) {setPassword(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validatePassword()}}  />
+                    <input maxLength={128} type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword.value } onChange={function(e) {setConPassword(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validateConPassword()}}  />
 
                     <img className="next-button" src="assets/shared/buttons/next/default.png" onClick={function() { if(!dis) {signUp()}}}
                         dis={dis.toString()}
@@ -158,6 +164,10 @@ export default function Signup({ onNavigate, transitioning }) {
 
                 </div>
 
+            </div>
+
+            <div className="feedback-container">
+                <Feedback err={username.valid ? "" : "UsernameInvalid"} mes={ "Hello sigma" } />
             </div>
 
             <img className="background" src="assets/shared/background/background.png" />

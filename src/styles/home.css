@@ -17,8 +17,8 @@
     top: 31%;
     left: 50%;
 
-    width: calc(var(--window-width) * 0.825);
-    height: calc(var(--window-height) * 0.65);
+    width: 82.5%;
+    height: 65%;
 
     margin: 0px;
     padding: 0px;
@@ -32,8 +32,8 @@
     grid-template-columns: repeat(3, 1fr);
 
 
-    row-gap: calc(var(--window-height) * 0.05);
-    column-gap: calc(var(--window-width) * 0.05);
+    row-gap: 5%;
+    column-gap: 5%;
 
 
 }
