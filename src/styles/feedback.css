@@ -4,6 +4,8 @@
 
     image-rendering: crisp-edges;
     image-rendering: pixelated;
+
+    min-width: 140px;
 }
 
 .UsernameInvalid {
