@@ -5,7 +5,6 @@ import "../../styles/home.css";
 export default function Home({ onNavigate, transitioning }) {
     return (
         <div>
-            <div className="container" id="song-grid" />
 
             <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" />
             <img className="background" src="assets/shared/background/background.png" />

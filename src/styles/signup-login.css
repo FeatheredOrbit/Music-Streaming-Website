@@ -23,20 +23,14 @@
     position: relative;
     top: 0%;
     left: 50%;
-
-    aspect-ratio: 3 / 2;
     
     transform: translateX(-50%);
 
     z-index: 3;
 
-    width: 60%;
-    min-width: 380px;
-
     overflow: visible;
 
     display: grid;
-    
 
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
@@ -47,7 +41,56 @@
     width: 100%;
     height: 100%;
 
-    min-height: 50vh;
+    height: 40vh;
+
+    grid-column: 1 / 2;
+    grid-row: 1 /2;
+
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    line-height: 0;
+}
+
+.base {
+    width: 100%;
+    height: 100%;
+
+    content: url("assets/shared/foreground/base_portrait.png");
+
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+
+    box-shadow: 0 0 0 8px black;
+
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+@media(orientation: portrait) {
+
+.login-signup-container {
+    aspect-ratio: 9 / 16;
+
+    width: 20%;
+}
+
+}
+
+@media(orientation: landscape) {
+
+.login-signup-container {
+    aspect-ratio: 3 / 2;
+
+    width: 60%;
+    min-width: 380px;
+}
+
+.chain {
+    width: 100%;
+    height: 100%;
+
+    height: 50vh;
 
     grid-column: 1 / 2;
     grid-row: 1 /2;
@@ -194,26 +237,29 @@ input:focus {
 }
 
 .feedback-container {
-    
-
     z-index: 3;
 
+    position: fixed;
+
+    left: 0%;
+    top: 25%;
+
     width: 100%;
-    height: 100%;
+    height: 20%;
 
-    
-
-    transform: translate(-50%, -50%);
+    max-height: 20%;
 
     display: grid;
 
     pointer-events: none;
 
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr 1fr;
+}
 
 }
+
+
 
 
 
