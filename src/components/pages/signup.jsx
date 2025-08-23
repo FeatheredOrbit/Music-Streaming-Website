@@ -141,7 +141,7 @@ export default function Signup({ onNavigate, transitioning }) {
 
                 <img className="chain" src="assets/shared/foreground/chain.png" />
                 <img className="base" src="assets/shared/foreground/base.png" />
-                
+
                 <div className="login-signup-content">
 
                     <p className="filling-text"> Create an account </p>
@@ -160,7 +160,6 @@ export default function Signup({ onNavigate, transitioning }) {
                             Click here.
                         </span>
                     </p>
-                    
 
                 </div>
 
