@@ -1,21 +1,23 @@
--- Drop and recreate the musicDB database for a clean initialization
+-- Drop and recreate the musicDB for debugging
 DROP DATABASE IF EXISTS musicDB;
 CREATE DATABASE musicDB;
 
 USE musicDB;
 
--- Create users table: stores user credentials and registration date
+-- Creates users table to store user credentials and registration date
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
         userID INT PRIMARY KEY AUTO_INCREMENT,
         username VARCHAR(100) NOT NULL UNIQUE,
         email VARCHAR(320) NOT NULL UNIQUE,
         encryptedPassword VARCHAR(255) NOT NULL,
-        dateJoined DATE NOT NULL
+        dateJoined DATE NOT NULL,
+        extra VARCHAR(2048),
+        profilePicture VARCHAR(100)
     );
     
--- Create songs table: stores song metadata and links to the uploading user
--- uploadedBy is a foreign key referencing users(userID)
+-- Creates songs table to stores song metadata and links to the uploading user
+-- uploadedBy is a foreign key referencing userID in the users table
 DROP TABLE IF EXISTS songs;
 CREATE TABLE IF NOT EXISTS songs (
     songID INT AUTO_INCREMENT PRIMARY KEY,

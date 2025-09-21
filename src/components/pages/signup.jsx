@@ -1,5 +1,4 @@
 import * as React from "react";
-import Feedback from "../extra/feedback";
 import "../../styles/signup-login.css";
 
 
@@ -122,14 +121,14 @@ export default function Signup({ onNavigate, transitioning }) {
         setConPassword(prev => ({...prev, valid: conPassword.value === password.value && password.valid, empty: conPassword.value.trim() === ""}));
     }
 
-    // Calls validation functions every 2.5 seconds for added functionality
+    // Calls validation functions every 1.5 seconds for added functionality
     React.useEffect(function() {
         const interval = setInterval(function() {
             validateUsername();
             validateEmail();
             validatePassword();
             validateConPassword();
-        }, 2500);
+        }, 1500);
 
         return() => {clearInterval(interval);};
     });
@@ -146,10 +145,17 @@ export default function Signup({ onNavigate, transitioning }) {
 
                     <p className="filling-text"> Create an account </p>
 
-                    <input maxLength={100} type="text" className="username-input" placeholder="Username" value={ username.value } onChange={function(e) {setUsername(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validateUsername() }} />
-                    <input maxLength={320} type="text" className="email-input" placeholder="Email" value={ email.value } onChange={function(e) {setEmail(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validateEmail() }} />
-                    <input maxLength={128} type="password" className="password-input" placeholder="Password" value={ password.value } onChange={function(e) {setPassword(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validatePassword()}}  />
-                    <input maxLength={128} type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword.value } onChange={function(e) {setConPassword(prev => ({...prev, value: e.target.value}))}} onBlur={function() { validateConPassword()}}  />
+                    <input maxLength={100} type="text" className="username-input" placeholder="Username" value={ username.value } onChange={function(e) {setUsername(prev => ({...prev, value: e.target.value}))}} valid={username.valid.toString()} onBlur={function() { validateUsername() }} />
+                    <p className="feedback username-feedback"> Super sigma ligma </p>
+
+                    <input maxLength={320} type="text" className="email-input" placeholder="Email" value={ email.value } onChange={function(e) {setEmail(prev => ({...prev, value: e.target.value}))}} valid={email.valid.toString()} onBlur={function() { validateEmail() }} />
+                    <p className="feedback email-feedback"> Super sigma ligma </p>
+
+                    <input maxLength={128} type="password" className="password-input" placeholder="Password" value={ password.value } onChange={function(e) {setPassword(prev => ({...prev, value: e.target.value}))}} valid={password.valid.toString()} onBlur={function() { validatePassword()}}  />
+                    <p className="feedback password-feedback"> Super sigma ligma </p>
+
+                    <input maxLength={128} type="password" className="confirm-password-input" placeholder="Confirm Password" value={ conPassword.value } onChange={function(e) {setConPassword(prev => ({...prev, value: e.target.value}))}} valid={conPassword.valid.toString()} onBlur={function() { validateConPassword()}}  />
+                    <p className="feedback confirm-password-feedback"> Super sigma ligma </p>
 
                     <img className="next-button" src="assets/shared/buttons/next/default.png" onClick={function() { if(!dis) {signUp()}}}
                         dis={dis.toString()}
@@ -163,10 +169,6 @@ export default function Signup({ onNavigate, transitioning }) {
 
                 </div>
 
-            </div>
-
-            <div className="feedback-container">
-                <Feedback err={username.valid ? "" : "UsernameInvalid"} mes={ "Hello sigma" } />
             </div>
 
             <img className="background" src="assets/shared/background/background.png" />
