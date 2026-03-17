@@ -9,11 +9,9 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
         userID INT PRIMARY KEY AUTO_INCREMENT,
         username VARCHAR(100) NOT NULL UNIQUE,
-        email VARCHAR(320) NOT NULL UNIQUE,
         encryptedPassword VARCHAR(255) NOT NULL,
         dateJoined DATE NOT NULL,
         extra VARCHAR(2048),
-        profilePicture VARCHAR(100)
     );
     
 -- Creates songs table to stores song metadata and links to the uploading user

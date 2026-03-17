@@ -12,7 +12,8 @@ export default function App() {
 
   const introDelay = 30;
 
-  const intro = ["assets/shared/foreground/intro/intro-0.png",
+  const intro = [
+    "assets/shared/foreground/intro/intro-0.png",
     "assets/shared/foreground/intro/intro-1.png",
     "assets/shared/foreground/intro/intro-2.png",
     "assets/shared/foreground/intro/intro-3.png",
@@ -29,7 +30,8 @@ export default function App() {
     "assets/shared/foreground/intro/intro-14.png"
   ];
 
-  const introShadowless = ["assets/shared/foreground/intro_shadowless/intro_shadowless-0.png",
+  const introShadowless = [
+    "assets/shared/foreground/intro_shadowless/intro_shadowless-0.png",
     "assets/shared/foreground/intro_shadowless/intro_shadowless-1.png",
     "assets/shared/foreground/intro_shadowless/intro_shadowless-2.png",
     "assets/shared/foreground/intro_shadowless/intro_shadowless-3.png",

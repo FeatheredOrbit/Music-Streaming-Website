@@ -1,5 +1,3 @@
-import * as React from "react";
-import * as Router from "react-router-dom";
 import "../../styles/home.css";
 
 export default function Home({ onNavigate, transitioning }) {
