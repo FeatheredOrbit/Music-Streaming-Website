@@ -22,19 +22,47 @@
 .signup-container {
     position: absolute;
     z-index: 3;
-    left: 50%;
+    left: 40%;
     top: 40%;
     width: 62.5%;
     height: 50%;
-    min-height: 350px; /* Slightly reduced minimum height */
-    min-width: 650px; /* Slightly wider minimum to accommodate layout */
-    background-color: rgba(0, 0, 0, 0.5);
+    min-height: 350px; 
+    min-width: 650px; 
     transform: translateX(-50%);
-    color: white;
     padding: 2rem;
     box-sizing: border-box;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.move-to-login {
+    position: absolute;
+    z-index: 3;
+    right: 10%;
+    top: 40%;
+    width: 15%;
+    height: 12.5%;
+    padding: 2rem;
+    box-sizing: border-box;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .signup-grid {
@@ -163,17 +191,17 @@
     max-height: 180px;
     min-width: 80px;
     min-height: 80px;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
     transition: transform 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url("assets/shared/buttons/next/default.png");
 
+    background-image: url("assets/shared/buttons/next/default.png");
     background-size: contain; 
     background-position: center;
     background-repeat: no-repeat; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 .signup-button:hover {

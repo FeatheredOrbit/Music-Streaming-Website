@@ -5,11 +5,11 @@
     error_reporting(E_ALL);
 
     $servername = "localhost";
-    $user = "user";
-    $password = "password";
+    $db_user = "root";
+    $db_password = "root";
     $dbname = "musicDB";
 
-    $conn = new mysqli($servername, $user, $password, $dbname);
+    $conn = new mysqli($servername, $db_user, $db_password, $dbname);
 
     if ($conn -> connect_error) {
         die("Connection failed: " . $conn->connect_error);

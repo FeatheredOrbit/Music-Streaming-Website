@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
         username VARCHAR(100) NOT NULL UNIQUE,
         encryptedPassword VARCHAR(255) NOT NULL,
         dateJoined DATE NOT NULL,
-        extra VARCHAR(2048),
+        extra VARCHAR(2048)
     );
     
 -- Creates songs table to stores song metadata and links to the uploading user

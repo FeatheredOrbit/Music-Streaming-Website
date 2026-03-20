@@ -5,10 +5,10 @@
     error_reporting(E_ALL);
 
     $servername = "localhost";
-    $username = "user";
-    $password = "password";
+    $db_username = "root";
+    $db_password = "root";
 
-    $conn = new mysqli($servername, $username, $password);
+    $conn = new mysqli($servername, $db_username, $db_password);
 
     if ($conn -> connect_error) {
         die("Connection error: " . $conn->connect_error);

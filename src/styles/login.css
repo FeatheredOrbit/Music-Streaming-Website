@@ -1,0 +1,207 @@
+@font-face {
+    font-family: "Milker";
+    src: url("assets/fonts/Milker.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PlayfairDisplay";
+    src: url("assets/fonts/PlayfairDisplay.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rye";
+    src: url("assets/fonts/Rye.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.login-container {
+    position: absolute;
+    z-index: 3;
+    left: 40%;
+    top: 40%;
+    width: 62.5%;
+    height: 50%;
+    min-height: 350px; 
+    min-width: 650px; 
+    transform: translateX(-50%);
+    padding: 2rem;
+    box-sizing: border-box;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.move-to-signup {
+    position: absolute;
+    z-index: 3;
+    right: 10%;
+    top: 40%;
+    width: 15%;
+    height: 12.5%;
+    padding: 2rem;
+    box-sizing: border-box;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.login-grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr; /* Username area takes 3fr, password area takes 1fr */
+    grid-template-rows: auto 1fr 1fr; /* Three rows: title, password row 1, password row 2 */
+    gap: 1rem 1.5rem;
+    height: 100%;
+    align-content: stretch;
+}
+
+.login-title {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: clamp(1.5rem, 5vh, 2.5rem);
+    letter-spacing: 4px;
+    margin: 0 0 0.5rem 0;
+    font-family: "Rye", cursive;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+}
+
+.username-section {
+    grid-column: 1 / 2;
+    grid-row: 2 / 4; /* Span both password rows */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding-right: 1rem;
+}
+
+.password-section {
+    grid-column: 2 / 3;
+    grid-row: 2 / 4;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+}
+
+.username-group {
+    width: 100%; 
+    margin-bottom: auto;
+}
+
+.password-group {
+    width: 100%;
+}
+
+.input-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.input-field {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    color: white;
+    font-size: clamp(0.8rem, 2vh, 1rem);
+    font-family: "PlayfairDisplay", serif;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.1s ease, background-color 0.1s ease;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+}
+
+.error-label {
+    font-size: 0.7rem;
+    color: #ff6b6b;
+    min-height: 1.2rem;
+    line-height: 1.2;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.login-button-container {
+    grid-column: 2 / 3;
+    grid-row: 2 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-left: 0.5rem;
+}
+
+.login-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 90%; 
+    height: 90%; 
+    max-width: 180px;
+    max-height: 180px;
+    min-width: 80px;
+    min-height: 80px;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-image: url("assets/shared/buttons/next/default.png");
+    background-size: contain; 
+    background-position: center;
+    background-repeat: no-repeat; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.login-button:hover {
+    transform: scale(1.1);
+    background-image: url("assets/shared/buttons/next/hover.png");
+}
+

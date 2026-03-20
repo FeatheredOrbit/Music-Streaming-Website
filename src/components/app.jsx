@@ -95,7 +95,6 @@ export default function App() {
     }
 
     setTransitioning(true);
-
     playIntro(true);
 
     setTimeout(function() {
@@ -109,7 +108,7 @@ export default function App() {
   }
 
   useEffect(function() {
-    fetch("api/Website/back-end/database-initiation/init.php")
+    fetch("api/Music-Streaming-Website/back-end/database-initiation/init.php")
     .then(response => response.text())
     .then(data => {
       console.log("init.php: ", data);

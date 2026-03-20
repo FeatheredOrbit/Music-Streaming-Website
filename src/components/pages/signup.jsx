@@ -1,6 +1,5 @@
-import * as React from "react";
 import { useState } from "react";
-import "../../styles/signup-login.css";
+import "../../styles/signup.css";
 
 export default function Signup({ onNavigate, transitioning }) {
     const [formData, setFormData] = useState({
@@ -15,7 +14,7 @@ export default function Signup({ onNavigate, transitioning }) {
         confirmPassword: ""
     });
 
-    const handleInputChange = (e) => {
+    function handleInputChange(e) {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -30,7 +29,7 @@ export default function Signup({ onNavigate, transitioning }) {
         }
     };
 
-    const validateForm = () => {
+    function validateForm() {
         let isValid = true;
         const newErrors = {
             username: "",
@@ -41,16 +40,25 @@ export default function Signup({ onNavigate, transitioning }) {
         if (!formData.username.trim()) {
             newErrors.username = "Username is required";
             isValid = false;
-        } else if (formData.username.length < 3) {
-            newErrors.username = "Username must be at least 3 characters";
+        } else if (formData.username.length > 100) {
+            newErrors.username = "Username can't be more than 100 characters";
             isValid = false;
         }
+
+        const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        const capitalLetterRegex = /[A-Z]/;
 
         if (!formData.password) {
             newErrors.password = "Password is required";
             isValid = false;
-        } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters";
+        } else if (formData.password.length < 8) {
+            newErrors.password = "Password must be at least 8 characters";
+            isValid = false;
+        } else if (!specialCharacterRegex.test(formData.password)) {
+            newErrors.password = "Password must contain at least one special character";
+            isValid = false;
+        } else if (!capitalLetterRegex.test(formData.password)) {
+            newErrors.password = "Password must contain at least a capital letter";
             isValid = false;
         }
 
@@ -63,34 +71,79 @@ export default function Signup({ onNavigate, transitioning }) {
         return isValid;
     };
 
-    const handleSignup = () => {
+    async function handleSignup() {
         if (!transitioning && validateForm()) {
 
-            console.log("Signup attempt with:", formData.username);
-        }
-    };
+            try {
+                // Create form data to send.
+                const dataToSend = new FormData();
+                dataToSend.append('username', formData.username);
+                dataToSend.append('password', formData.password);
+                dataToSend.append('conPassword', formData.confirmPassword);
 
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSignup();
+                const response = await fetch("api/Music-Streaming-Website/back-end/scripts/login-signup/signup.php", {
+                    method: 'POST',
+                    body: dataToSend
+                });
+
+                const data = await response.json();
+                
+                // The backend re-validates the data before inserting it into the database.
+                if (data.usernameInvalid) {
+                    setErrors(prev => ({
+                        ...prev,
+                        username: "Username must be between 1 and 100 characters"
+                    }));
+                } 
+                else if (data.passwordInvalid) {
+                    setErrors(prev => ({
+                        ...prev,
+                        password: "Password must be between 8 and 128 characters"
+                    }));
+                } 
+                else if (data.conPasswordInvalid) {
+                    setErrors(prev => ({
+                        ...prev,
+                        confirmPassword: "Passwords do not match, from server"
+                    }));
+                } 
+                else if (data.usernameExists) {
+                    setErrors(prev => ({
+                        ...prev,
+                        username: "Username already exists"
+                    }));
+                } 
+                // If the signup is successful, throw a message and go back to the home page.
+                else if (data.signupSuccessful) {
+                    alert("Signup was successful!");
+                    onNavigate("/");
+                } 
+                // if the signup isn't successful, throw a message and stay on the page.
+                else if (!data.signupSuccessful) {
+                    alert("Something went wrong during signup");
+                }
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                throw error;
+            }
         }
     };
 
     return (
         <div>
-            <img className="background" src="assets/shared/background/background.png" alt="background" />
+            <img className="background" src="assets/shared/background/background.png" />
 
-            <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" alt="button pillar" />
+            <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" />
 
-            <img className="pillars pillar-left" src="assets/shared/background/actual_pillar.png" alt="left pillar" />
-            <img className="pillars pillar-right" src="assets/shared/background/actual_pillar.png" alt="right pillar" />
+            <img className="pillars pillar-left" src="assets/shared/background/actual_pillar.png" />
+            <img className="pillars pillar-right" src="assets/shared/background/actual_pillar.png" />
 
             <img 
                 className="button home-button" 
                 id="home-button" 
                 title="Home" 
                 src="assets/shared/buttons/home/default.png" 
-                alt="home" 
                 onClick={function() { if (!transitioning) { onNavigate("/") }}} 
             />
             <img 
@@ -98,7 +151,6 @@ export default function Signup({ onNavigate, transitioning }) {
                 id="account-button" 
                 title="Click to set up account" 
                 src="assets/shared/buttons/account/default.png" 
-                alt="account" 
                 onClick={function() { if (!transitioning) { onNavigate("/signup") }}} 
             />
 
@@ -115,7 +167,6 @@ export default function Signup({ onNavigate, transitioning }) {
                             placeholder="Enter username"
                             value={formData.username}
                             onChange={handleInputChange}
-                            onKeyDown={handleKeyPress}
                         />
                         <div className="error-label">{errors.username}</div>
                     </div>
@@ -129,7 +180,6 @@ export default function Signup({ onNavigate, transitioning }) {
                             placeholder="Enter password"
                             value={formData.password}
                             onChange={handleInputChange}
-                            onKeyDown={handleKeyPress}
                         />
                         <div className="error-label">{errors.password}</div>
                     </div>
@@ -143,7 +193,6 @@ export default function Signup({ onNavigate, transitioning }) {
                             placeholder="Confirm password"
                             value={formData.confirmPassword}
                             onChange={handleInputChange}
-                            onKeyDown={handleKeyPress}
                         />
                         <div className="error-label">{errors.confirmPassword}</div>
                     </div>
@@ -157,6 +206,14 @@ export default function Signup({ onNavigate, transitioning }) {
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <div className="move-to-login">
+                <p> Already have an account? { } 
+                    <span 
+                    style={{color:"red", textDecoration:"underline"}}
+                    onClick={() => {onNavigate("/login")}}> Click here! </span> 
+                </p>
             </div>
         </div>
     );
