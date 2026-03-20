@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import "../../styles/home.css";
+import "../../styles/account.css";
 
-export default function Home({ onNavigate, transitioning }) {
+export default function Account({ onNavigate, transitioning }) {
     const [userData, setUserData] = useState({
         loggedIn: false,
         username: "",
+        dateJoined: "",
+        extra: "",
         profilePicture: ""
     });
 
@@ -34,6 +36,20 @@ export default function Home({ onNavigate, transitioning }) {
                 }));
             }
 
+            if (data.dateJoined) {
+                setUserData(prev => ({
+                    ...prev,
+                    dateJoined: data.dateJoined
+                }));
+            }
+
+            if (data.extra) {
+                setUserData(prev => ({
+                    ...prev,
+                    extra: data.dateExtra
+                }));
+            }
+
             if (data.pathToProfilePicture) {
                 setUserData(prev => ({
                     ...prev,
@@ -53,6 +69,19 @@ export default function Home({ onNavigate, transitioning }) {
 
     return (
         <div>
+
+            <div className="account-container">
+                <input
+                    type="file"
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                />  
+                <img 
+                    className="account-picture"
+                    src={userData.profilePicture || "assets/shared/buttons/account/default.png"}
+                    has_profile_picture={(userData.profilePicture ? true : false).toString()}
+                />   
+            </div>
 
             <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" />
             <img className="background" src="assets/shared/background/background.png" />

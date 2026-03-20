@@ -23,25 +23,34 @@ function startSession() {
     }
 }
 
-// Function that checks if user is logged in.
-function isLoggedIn() {
-    // If user_id exists and is not empty, return true.
-    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
-}
-
 // Function that gets the current user by using the stored id and a database connection to extract user data.
 function getCurrentUser($conn) {
-    if (!isLoggedIn()) {
+    if (!isset($_SESSION['user_id'])) {
         return null;
     }
-    
+
     $user_id = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT id, username, dateJoined FROM users WHERE id = ? LIMIT 1");
+
+    $stmt = $conn->prepare("SELECT userId, username, dateJoined FROM users WHERE userId = ? LIMIT 1");
     $stmt->bind_param("i", $user_id);
+
+    if (!$stmt) {
+        return null;
+    }
+
     $stmt->execute();
     $result = $stmt->get_result();
-    
-    return $result->fetch_assoc();
+
+    $user = $result->fetch_assoc();
+
+    if (!$user) {
+        unset($_SESSION['user_id']);
+        return null;
+    }
+
+    $stmt->close();
+
+    return $user;
 }
 
 function logIn($id) {

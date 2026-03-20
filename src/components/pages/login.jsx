@@ -162,7 +162,7 @@ export default function Login({ onNavigate, transitioning }) {
                 <p> Don't have an account? { } 
                     <span 
                     style={{color:"red", textDecoration:"underline"}}
-                    onClick={() => {onNavigate("/signup")}}> Click here! </span> 
+                    onClick={() => {if (!transitioning) {onNavigate("/signup")}}}> Click here! </span> 
                 </p>
             </div>
         </div>

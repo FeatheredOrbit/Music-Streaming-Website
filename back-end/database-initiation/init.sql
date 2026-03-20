@@ -7,12 +7,13 @@ USE musicDB;
 -- Creates users table to store user credentials and registration date
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
-        userID INT PRIMARY KEY AUTO_INCREMENT,
-        username VARCHAR(100) NOT NULL UNIQUE,
-        encryptedPassword VARCHAR(255) NOT NULL,
-        dateJoined DATE NOT NULL,
-        extra VARCHAR(2048)
-    );
+    userID INT PRIMARY KEY AUTO_INCREMENT,
+     username VARCHAR(100) NOT NULL UNIQUE,
+    encryptedPassword VARCHAR(255) NOT NULL,
+    dateJoined DATE NOT NULL,
+    extra VARCHAR(2048),
+    pathToProfilePicture VARCHAR(256)
+);
     
 -- Creates songs table to stores song metadata and links to the uploading user
 -- uploadedBy is a foreign key referencing userID in the users table

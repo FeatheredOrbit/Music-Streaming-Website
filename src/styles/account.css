@@ -1,0 +1,51 @@
+@font-face {
+    font-family: "Milker";
+    src: url("assets/fonts/Milker.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PlayfairDisplay";
+    src: url("assets/fonts/PlayfairDisplay.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rye";
+    src: url("assets/fonts/Rye.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.account-container {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 35%;
+    width: 80%;
+    height: 60%;
+    min-height: 350px; 
+    min-width: 650px; 
+    transform: translateX(-50%);
+    padding: 2rem;
+    box-sizing: border-box;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.account-picture {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+
+    width: 17.5%;
+
+    aspect-ratio: 1 / 1;
+}

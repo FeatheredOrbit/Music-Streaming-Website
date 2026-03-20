@@ -121,9 +121,14 @@
     height: 6%;
 }
 
-.account-button:hover {
+.account-button[has_profile_picture="false"]:hover {
     content: url(assets/shared/buttons/account/hover.png);
 
+    width: 12%;
+    height: 6%;
+}
+
+.account-button[has_profile_picture="true"]:hover {
     width: 12%;
     height: 6%;
 }
@@ -171,9 +176,14 @@
     height: 6%;
 }
 
-.account-button:hover {
+.account-button[has_profile_picture="false"]:hover {
     content: url(assets/shared/buttons/account/hover.png);
 
+    width: 6%;
+    height: 6%;
+}
+
+.account-button[has_profile_picture="true"]:hover {
     width: 6%;
     height: 6%;
 }

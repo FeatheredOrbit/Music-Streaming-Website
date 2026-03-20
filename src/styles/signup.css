@@ -1,24 +1,3 @@
-@font-face {
-    font-family: "Milker";
-    src: url("assets/fonts/Milker.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "PlayfairDisplay";
-    src: url("assets/fonts/PlayfairDisplay.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Rye";
-    src: url("assets/fonts/Rye.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-}
-
 .signup-container {
     position: absolute;
     z-index: 3;
