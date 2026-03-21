@@ -113,10 +113,10 @@ export default function Signup({ onNavigate, transitioning }) {
                         username: "Username already exists"
                     }));
                 } 
-                // If the signup is successful, throw a message and go back to the home page.
+                // If the signup is successful, throw a message and go to the account page.
                 else if (data.signupSuccessful) {
                     alert("Signup was successful!");
-                    onNavigate("/");
+                    onNavigate("/account");
                 } 
                 // if the signup isn't successful, throw a message and stay on the page.
                 else if (!data.signupSuccessful) {

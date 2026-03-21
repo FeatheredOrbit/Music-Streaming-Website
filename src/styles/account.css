@@ -49,3 +49,25 @@
 
     aspect-ratio: 1 / 1;
 }
+
+.extra-information-container {
+    position: absolute;
+    left: 18.25%;
+    top: 5%;
+
+    width: calc(100% - 18.75% - 1%);
+    height: 30%;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

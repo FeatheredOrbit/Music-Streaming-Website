@@ -31,7 +31,7 @@ function getCurrentUser($conn) {
 
     $user_id = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT userId, username, dateJoined FROM users WHERE userId = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT userId, username, dateJoined, encryptedPassword, pathToProfilePicture, extra FROM users WHERE userId = ? LIMIT 1");
     $stmt->bind_param("i", $user_id);
 
     if (!$stmt) {
@@ -51,6 +51,65 @@ function getCurrentUser($conn) {
     $stmt->close();
 
     return $user;
+}
+
+function changeExtraInformation($conn, $information) {
+    $user = getCurrentUser($conn);
+
+    if (!$user) {
+        return false;
+    }
+
+    $stmt = $conn->prepare("UPDATE users SET extra = ? WHERE userId = ?");
+
+    if (!$stmt) {
+        return false; 
+    }
+
+    $stmt->bind_param("si", $information, $user["userId"]);
+
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+}
+
+function uploadProfilePicture($conn, $file) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return null;
+    }
+    
+    $username = $user['username'];
+    $userId = $user['userId'];
+    
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    
+    $date = date('Y-m-d_H-i-s');
+    $filename = $username . '_' . $date . '.' . $extension;
+    
+    $relativePath = 'Music-Streaming-Website/back-end/uploads/pfp/' . $filename;
+    $fullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;
+    
+    if (move_uploaded_file($file['tmp_name'], $fullPath)) {
+
+        $pathToStore = 'Music-Streaming-Website/back-end/uploads/pfp/' . $filename;
+        $stmt = $conn->prepare("UPDATE users SET pathToProfilePicture = ? WHERE userId = ?");
+        $stmt->bind_param("si", $pathToStore, $userId);
+        
+        if ($stmt->execute()) {
+            $stmt->close();
+            return $pathToStore;
+
+        } else {
+            $stmt->close();
+            unlink($fullPath);
+            return null;
+        }
+    }
+    
+    return null;
 }
 
 function logIn($id) {

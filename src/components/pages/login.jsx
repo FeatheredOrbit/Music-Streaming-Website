@@ -79,7 +79,7 @@ export default function Login({ onNavigate, transitioning }) {
                 } 
                 else if (data.loginSuccessful) {
                     alert("Login was successful!");
-                    onNavigate("/");
+                    onNavigate("/account");
                 }
                 else if (!data.loginSuccessful) {
                     alert("Something went wrong with the login");

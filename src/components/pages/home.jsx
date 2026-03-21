@@ -37,7 +37,7 @@ export default function Home({ onNavigate, transitioning }) {
             if (data.pathToProfilePicture) {
                 setUserData(prev => ({
                     ...prev,
-                    profilePicture: pathToProfilePicture
+                    profilePicture: data.pathToProfilePicture
                 }));
             }
         }
@@ -70,7 +70,7 @@ export default function Home({ onNavigate, transitioning }) {
                 has_profile_picture={(userData.profilePicture ? true : false).toString()}
                 id="account-button" 
                 title={userData.loggedIn ? userData.username : "Click to set up account"} 
-                src={userData.profilePicture || "assets/shared/buttons/account/default.png"}
+                src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
                 onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} />
         </div>
     );
