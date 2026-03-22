@@ -46,14 +46,13 @@
     top: 0%;
 
     width: 17.5%;
-
-    aspect-ratio: 1 / 1;
+    height: 50%;
 }
 
 .extra-information-container {
     position: absolute;
     left: 18.25%;
-    top: 5%;
+    top: 17.5%;
 
     width: calc(100% - 18.75% - 1%);
     height: 30%;
@@ -70,4 +69,84 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.date-joined-container {
+    position: absolute;
+    left: 1%;
+    top: 52.5%;
+
+    line-height: 0.1;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.username-container {
+    position: absolute;
+    left: 18.25%;
+    top: 5%;
+
+    line-height: 0.1;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.change-password-button {
+    position: absolute;
+
+    bottom: 14%;
+    right: 5%;
+
+    aspect-ratio: 1 / 1;
+
+    width: 5%;
+
+    transform: translate(50%, 50%);
+}
+
+.change-password-button:hover {
+    content: url(assets/shared/buttons/change_password/hover.png);
+
+    width: 6%;
+}
+
+.log-out-button {
+    position: absolute;
+
+    bottom: 14%;
+    left: 5%;
+
+    aspect-ratio: 1 / 1;
+
+    width: 5%;
+
+    transform: translate(-50%, 50%);
+}
+
+.log-out-button:hover {
+    content: url(assets/shared/buttons/log_out/hover.png);
+
+    width: 6%;
 }

@@ -101,10 +101,22 @@ export default function Signup({ onNavigate, transitioning }) {
                         password: "Password must be between 8 and 128 characters"
                     }));
                 } 
+                else if (data.passwordNotSpecial) {
+                    setErrors(prev => ({
+                        ...prev,
+                        password: "Password must contain at least one special character"
+                    }));
+                }
+                else if (data.passwordNotCapital) {
+                    setErrors(prev => ({
+                        ...prev,
+                        password: "Password must contain at least a capital letter"
+                    }));
+                }  
                 else if (data.conPasswordInvalid) {
                     setErrors(prev => ({
                         ...prev,
-                        confirmPassword: "Passwords do not match, from server"
+                        confirmPassword: "Passwords do not match"
                     }));
                 } 
                 else if (data.usernameExists) {
@@ -141,14 +153,12 @@ export default function Signup({ onNavigate, transitioning }) {
 
             <img 
                 className="button home-button" 
-                id="home-button" 
                 title="Home" 
                 src="assets/shared/buttons/home/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/") }}} 
             />
             <img 
                 className="button account-button" 
-                id="account-button" 
                 title="Click to set up account" 
                 src="assets/shared/buttons/account/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/signup") }}} 

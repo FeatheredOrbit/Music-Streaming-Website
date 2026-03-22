@@ -104,14 +104,12 @@ export default function Login({ onNavigate, transitioning }) {
 
             <img 
                 className="button home-button" 
-                id="home-button" 
                 title="Home" 
                 src="assets/shared/buttons/home/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/") }}} 
             />
             <img 
                 className="button account-button" 
-                id="account-button" 
                 title="Click to set up account" 
                 src="assets/shared/buttons/account/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/login") }}} 

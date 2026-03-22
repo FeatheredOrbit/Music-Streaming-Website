@@ -4,7 +4,8 @@ import "../../styles/account.css";
 const InputChangeType = {
     PFP : "pfp",
     USERNAME : "username",
-    EXTRA_INFORMATION : "extra"
+    EXTRA_INFORMATION : "extra",
+    PASSWORD : "password"
 }
 
 export default function Account({ onNavigate, transitioning }) {
@@ -124,6 +125,81 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
+    async function changeUsername() {
+        while (true) {
+            const username = prompt("Please insert new username:");
+
+            if (username === null) {
+                return;
+            }
+
+            if (username.trim().length === 0) {
+                alert("Username is required");
+                continue;
+
+            } else if (username.trim().length > 100) {
+                alert("Username can't be more than 100 characters");
+                continue;
+            }
+
+            try {
+
+                const dataToSend = new FormData();
+                dataToSend.append("username", username);
+
+                const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/change_username.php", {
+                    method: 'POST',
+                    body: dataToSend
+                });
+
+                const data = await response.json();
+
+                if (data.emptyUsername) {
+                    alert("Username is required");
+                    continue;
+
+                } else if (data.usernameInvalid) {
+                    alert("Username must be between 1 and 100 characters");
+                    continue;
+
+                } else if (data.notLoggedIn) {
+                    alert("User is not logged in, back to the home page you go");
+                    onNavigate("/");
+                    return;
+
+                } else if (data.usernameTaken) {
+                    alert("Username already exists");
+                    continue;
+
+                } else if (data.error) {
+                    alert("An error occurred");
+                    return;
+
+                }
+
+                if (data.success) {
+                    alert("Username successfully changed! Yippie!");
+                    setUserData(prev => ({
+                        ...prev,
+                        username: username
+                    }));
+                    return;
+
+                } else {
+                    alert("An error occurred");
+                    return;
+                }
+
+            }
+            catch (error) {
+                console.log("Upload error:", error);
+                alert("An error occurred. Please try again.");
+                throw error;
+            }
+
+        }
+    }
+
     async function changeExtraInfo() {
         const information = prompt("Insert new information:");
 
@@ -164,69 +240,166 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
-    async function validatePassword(request) {
-    while (true) { 
-        let password;
-        
-        if (request === InputChangeType.PFP) {
-            password = prompt("Insert password (Be quick if on firefox or it won't open the file picker):");
-        }   
-        else {
-            password = prompt("Insert password:");
-        }
+    async function changePassword() {
+        while (true) {
+            const password = prompt("Insert new password:");
 
-        if (password === null) {
-            return; 
-        }
+            const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+            const capitalLetterRegex = /[A-Z]/;
 
-        if (password.trim() === "") {
-            alert("Password can't be empty");
-            continue; 
-        }
-
-        try {
-            const dataToSend = new FormData();
-            dataToSend.append("password", password);
-
-            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/validate/validate_password.php", {
-                method: 'POST',
-                body: dataToSend
-            });
-
-            const data = await response.json();
-
-            if (data.notLoggedIn) {
-                alert("User is not logged in, back to the home page you go");
-                onNavigate("/");
+            if (password === null) {
                 return;
             }
-            
-            if (data.passwordResult) {
-                if (request === InputChangeType.PFP) {
-                    accountPictureInputRef.current.click();
-                }
-                else if (request === InputChangeType.EXTRA_INFORMATION) {
-                    changeExtraInfo();
-                }
-                return;
-            }
-            else {
-                alert("Password doesn't match");
+
+            if (!password) {
+                alert("Password is required");
+                continue;
+
+            } else if (password.length < 8) {
+                alert("Password must be at least 8 characters");
+                continue;
+
+            } else if (!specialCharacterRegex.test(password)) {
+                alert("Password must contain at least one special character");
+                continue;
+
+            } else if (!capitalLetterRegex.test(password)) {
+                alert("Password must contain at least a capital letter");
                 continue;
             }
 
-        }
-        catch (error) {
-            console.error('Fetch error:', error);
-            alert("An error occurred. Please try again.");
-            return;
+            try {
+
+                const dataToSend = new FormData();
+                dataToSend.append("password", password);
+
+                const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/change_password.php", {
+                    method: 'POST',
+                    body: dataToSend
+                });
+
+                const data = await response.json();
+
+                if (data.emptyPassword) {
+                    alert("Password can't be empty");
+                    continue;
+                }
+                else if (data.passwordInvalid) {
+                    alert("Password must be between 8 and 128 characters");
+                    continue;
+                }
+                else if (data.passwordNotSpecial) {
+                    alert("Password must contain at least one special character");
+                    continue;
+                }
+                else if (data.passwordNotCapital) {
+                    alert("Password must contain at least a capital letter");
+                    continue;
+                }
+
+                if (data.success) {
+                    alert("Password successfully changed! Yippie!");
+                    return;
+                }
+                else {
+                    alert("Failed to update password");
+                    return;
+                }
+            }
+            catch (error) {
+                console.log("Upload error:", error);
+                throw error;
+            }
         }
     }
-}
+
+    async function validatePassword(request) {
+        while (true) {
+            let password;
+
+            if (request === InputChangeType.PFP) {
+                password = prompt("Insert password (Be quick if on firefox or it won't open the file picker):");
+            }
+            else {
+                password = prompt("Insert password:");
+            }
+
+            if (password === null) {
+                return;
+            }
+
+            if (password.trim() === "") {
+                alert("Password can't be empty");
+                continue;
+            }
+
+            try {
+                const dataToSend = new FormData();
+                dataToSend.append("password", password);
+
+                const response = await fetch("api/Music-Streaming-Website/back-end/scripts/validate/validate_password.php", {
+                    method: 'POST',
+                    body: dataToSend
+                });
+
+                const data = await response.json();
+
+                if (data.notLoggedIn) {
+                    alert("User is not logged in, back to the home page you go");
+                    onNavigate("/");
+                    return;
+                }
+
+                if (data.passwordResult) {
+                    if (request === InputChangeType.PFP) {
+                        accountPictureInputRef.current.click();
+                    }
+                    else if (request === InputChangeType.EXTRA_INFORMATION) {
+                        changeExtraInfo();
+                    }
+                    else if (request === InputChangeType.USERNAME) {
+                        changeUsername();
+                    }
+                    else if (request === InputChangeType.PASSWORD) {
+                        changePassword();
+                    }
+
+                    return;
+                }
+                else {
+                    alert("Password doesn't match");
+                    continue;
+                }
+            }
+            catch (error) {
+                console.error('Fetch error:', error);
+                alert("An error occurred. Please try again.");
+                return;
+            }
+        }
+    }
+
+    async function logOutClicked() {
+        const message = confirm("Are you sure you want to log out?");
+
+        if (!message) {return;}
+
+        try {
+
+            await fetch("api/Music-Streaming-Website/back-end/scripts/session/log_out.php");
+            onNavigate("/");
+
+            return;
+
+        }
+        catch (error) {
+            console.log("Logout error:", error);
+            throw error;
+        }
+    }
 
     return (
         <div>
-
             <div className="account-container">
                 <input
                     type="file"
@@ -239,12 +412,34 @@ export default function Account({ onNavigate, transitioning }) {
                     className="account-picture"
                     src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
                     has_profile_picture={(userData.profilePicture ? true : false).toString()}
-                    onClick={() => {validatePassword(InputChangeType.PFP)}}
+                    onClick={() => {if (transitioning) {return;} validatePassword(InputChangeType.PFP)}}
                 />
 
-                <div className="extra-information-container" onClick={() => {validatePassword(InputChangeType.EXTRA_INFORMATION)}}>
+                <div className="date-joined-container">
+                    <p> {userData.loggedIn ? `Joined: ${userData.dateJoined}` : ""} </p>
+                </div>
+
+                <div className="username-container" onClick={() => {if (transitioning) {return;} validatePassword(InputChangeType.USERNAME)}}>
+                    <p> {userData.loggedIn ? userData.username : "User is not logged in"} </p>
+                </div>
+
+                <div className="extra-information-container" onClick={() => {if (transitioning) {return;} validatePassword(InputChangeType.EXTRA_INFORMATION)}}>
                     <p> {userData.extra ? userData.extra : "No information on this user"} </p>
-                </div>   
+                </div>  
+
+                <img 
+                    className="button change-password-button" 
+                    src="assets/shared/buttons/change_password/default.png" 
+                    title="Change Password" 
+                    onClick={() => {if (transitioning) {return;} validatePassword(InputChangeType.PASSWORD)}}
+                /> 
+
+                <img 
+                    className="button log-out-button" 
+                    src="assets/shared/buttons/log_out/default.png" 
+                    title="Log Out" 
+                    onClick={() => {if (transitioning) {return;} logOutClicked()}}
+                />
             </div>
 
             <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" />
@@ -254,14 +449,13 @@ export default function Account({ onNavigate, transitioning }) {
 
             <img 
                 className="button home-button" 
-                id="home-button" title="Home" 
+                title="Home" 
                 src="assets/shared/buttons/home/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/") }}} 
             />
             <img 
                 className="button account-button" 
-                has_profile_picture={(userData.profilePicture ? true : false).toString()}
-                id="account-button" 
+                has_profile_picture={(userData.profilePicture ? true : false).toString()} 
                 title={userData.loggedIn ? userData.username : "Click to set up account"} 
                 src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
                 onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} />

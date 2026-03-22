@@ -31,6 +31,21 @@ if (strlen($password) < 8 || strlen($password) > 128) {
     exit;
 }
 
+$specialCharacterRegex = '/[!@#$%^&*()_+\-=\[\]{};:\'\"\\|,.<>\/?]/';
+$capitalLetterRegex = '/[A-Z]/';
+
+if (!preg_match($specialCharacterRegex, $password)) {
+    $res["passwordNotSpecial"] = true;
+    echo json_encode($res);
+    exit;
+}
+
+if (!preg_match($capitalLetterRegex, $password)) {
+    $res["passwordNotCapital"] = true;
+    echo json_encode($res);
+    exit;
+}
+
 if ($password != $conPassword) {
     $res["conPasswordInvalid"] = true;
     echo json_encode($res);

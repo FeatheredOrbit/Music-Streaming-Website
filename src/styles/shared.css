@@ -76,9 +76,6 @@
     transition: width, height;
     transition-duration: 0.3s;
     transition-timing-function: cubic-bezier(.21,.94,.59,2.33);
-
-    transform: translate(-50%, -50%);
-
 }
 
 @media(orientation: portrait) {
@@ -104,6 +101,8 @@
 
     width: 10%;
     height: 5%;
+
+    transform: translate(-50%, -50%);
 }
 
 .account-button {
@@ -112,10 +111,29 @@
 
     width: 10%;
     height: 5%;
+
+    transform: translate(-50%, -50%);
+}
+
+.library-button {
+    top: 29%;
+    left: 62%;
+
+    width: 10%;
+    height: 5%;
+
+    transform: translate(-50%, -50%);
 }
 
 .home-button:hover {
     content: url(assets/shared/buttons/home/hover.png);
+
+    width: 12%;
+    height: 6%;
+}
+
+.library-button:hover {
+    content: url(assets/shared/buttons/library/hover.png);
 
     width: 12%;
     height: 6%;
@@ -159,6 +177,18 @@
 
     width: 5%;
     height: 5%;
+
+    transform: translate(-50%, -50%);
+}
+
+.library-button {
+    top: 25.5%;
+    left: 55%;
+
+    width: 5%;
+    height: 5%;
+
+    transform: translate(-50%, -50%);
 }
 
 .account-button {
@@ -167,10 +197,19 @@
 
     width: 5%;
     height: 5%;
+
+    transform: translate(-50%, -50%);
 }
 
 .home-button:hover {
     content: url(assets/shared/buttons/home/hover.png);
+
+    width: 6%;
+    height: 6%;
+}
+
+.library-button:hover {
+    content: url(assets/shared/buttons/library/hover.png);
 
     width: 6%;
     height: 6%;

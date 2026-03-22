@@ -53,6 +53,61 @@ function getCurrentUser($conn) {
     return $user;
 }
 
+function changeUsername($conn, $username) {
+    $user = getCurrentUser($conn);
+
+    if (!$user) {
+        return ["notLoggedIn" => true];
+    }
+
+    $checkStmt = $conn->prepare("SELECT userId FROM users WHERE username = ? AND userId != ?");
+    $checkStmt->bind_param("si", $username, $user["userId"]);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+    
+    if ($checkStmt->num_rows > 0) {
+        $checkStmt->close();
+        return ["usernameTaken" => true];
+    }
+    $checkStmt->close();
+
+    $stmt = $conn->prepare("UPDATE users SET username = ? WHERE userId = ?");
+
+    if (!$stmt) {
+        return ["error" => true]; 
+    }
+
+    $stmt->bind_param("si", $username, $user["userId"]);
+
+    $result = ["success" => $stmt->execute()];
+    $stmt->close();
+
+    return $result;
+}
+
+function changePassword($conn, $password) {
+    $user = getCurrentUser($conn);
+
+    if (!$user) {
+        return false;
+    }
+
+    $stmt = $conn->prepare("UPDATE users SET encryptedPassword = ? WHERE userId = ?");
+
+    if (!$stmt) {
+        return false; 
+    }
+
+    $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt->bind_param("si", $encryptedPassword, $user["userId"]);
+
+    $result = $stmt->execute();
+    $stmt->close();
+
+    return $result;
+}
+
 function changeExtraInformation($conn, $information) {
     $user = getCurrentUser($conn);
 

@@ -61,17 +61,23 @@ export default function Home({ onNavigate, transitioning }) {
 
             <img 
                 className="button home-button" 
-                id="home-button" title="Home" 
+                title="Home" 
                 src="assets/shared/buttons/home/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/") }}} 
             />
             <img 
                 className="button account-button" 
                 has_profile_picture={(userData.profilePicture ? true : false).toString()}
-                id="account-button" 
                 title={userData.loggedIn ? userData.username : "Click to set up account"} 
                 src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
-                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} />
+                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} 
+            />
+            <img 
+                className="button library-button" 
+                src="assets/shared/buttons/library/default.png"
+                title="Library"
+                
+            />
         </div>
     );
 }
