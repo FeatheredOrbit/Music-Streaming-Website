@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import "../../styles/home.css";
+import "../../styles/library.css";
 
-export default function Home({ onNavigate, transitioning }) {
+export default function Library({ onNavigate, transitioning }) {
     const [userData, setUserData] = useState({
         loggedIn: false,
         username: "",
@@ -75,8 +75,8 @@ export default function Home({ onNavigate, transitioning }) {
             <img 
                 className="button library-button" 
                 src="assets/shared/buttons/library/default.png"
-                is_logged_in={userData.loggedIn.toString()}
                 title="Library"
+                is_logged_in={userData.loggedIn.toString()}
                 onClick={function() { if (!transitioning && userData.loggedIn) { onNavigate("/library") }}} 
             />
         </div>

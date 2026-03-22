@@ -458,7 +458,15 @@ export default function Account({ onNavigate, transitioning }) {
                 has_profile_picture={(userData.profilePicture ? true : false).toString()} 
                 title={userData.loggedIn ? userData.username : "Click to set up account"} 
                 src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
-                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} />
+                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} 
+            />
+            <img 
+                className="button library-button" 
+                src="assets/shared/buttons/library/default.png"
+                title="Library"
+                is_logged_in={userData.loggedIn.toString()}
+                onClick={function() { if (!transitioning && userData.loggedIn) { onNavigate("/library") }}} 
+            />
         </div>
     );
 }

@@ -5,6 +5,7 @@ import Home from './pages/home';
 import Signup from './pages/signup';
 import Login from './pages/login';
 import Account from './pages/account';
+import Library from './pages/library';
 
 export default function App() {
   const navigate = useNavigate();
@@ -133,6 +134,8 @@ export default function App() {
 
           <Route path="/signup" element={<Signup onNavigate={ onNavigate } transitioning={ transitioning } />} />
           <Route path="/login" element={<Login onNavigate={ onNavigate} transitioning={ transitioning } />} />
+
+          <Route path="/library" element={<Library onNavigate={ onNavigate } transitioning={ transitioning } />} />
 
           <Route path="/account" element={<Account onNavigate={ onNavigate } transitioning={ transitioning } />} />
         </Routes>

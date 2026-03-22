@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../styles/signup.css";
 
 export default function Signup({ onNavigate, transitioning }) {
+    const [loggedIn, setLoggedIn] = useState(false);
+
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -142,6 +144,31 @@ export default function Signup({ onNavigate, transitioning }) {
         }
     };
 
+    async function checkLogStatus() {
+        try {
+            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
+    
+            const data = await response.json();
+    
+            if (data.notLoggedIn) {
+                setLoggedIn(false);
+                return;
+    
+            } else {
+                setLoggedIn(true);
+                return;
+            }
+        }
+        catch (error) {
+            console.log("Couldn't fetch data", error);
+            throw error;
+        }
+    }
+    
+    useEffect(function() {
+        checkLogStatus();
+    }, []);
+
     return (
         <div>
             <img className="background" src="assets/shared/background/background.png" />
@@ -162,6 +189,13 @@ export default function Signup({ onNavigate, transitioning }) {
                 title="Click to set up account" 
                 src="assets/shared/buttons/account/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/signup") }}} 
+            />
+            <img 
+                className="button library-button" 
+                src="assets/shared/buttons/library/default.png"
+                title="Library"
+                is_logged_in={loggedIn.toString()}
+                onClick={function() { if (!transitioning && loggedIn) { onNavigate("/library") }}} 
             />
 
             <div className="signup-container">
