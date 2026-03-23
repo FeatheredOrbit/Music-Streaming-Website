@@ -237,4 +237,50 @@ function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
         return ['uploadFailed' => true];
     }
 }
+
+
+function getAllSongs($conn, $userId = null) {
+    if ($userId) {
+        
+        $stmt = $conn->prepare("SELECT s.*, u.username as uploadedByUsername 
+                                FROM songs s 
+                                JOIN users u ON s.uploadedBy = u.userId 
+                                WHERE s.uploadedBy = ? 
+                                ORDER BY s.datePosted DESC");
+
+        $stmt->bind_param("i", $userId);
+    } else {
+        
+        $stmt = $conn->prepare("SELECT s.*, u.username as uploadedByUsername 
+                                FROM songs s 
+                                JOIN users u ON s.uploadedBy = u.userId 
+                                ORDER BY s.datePosted DESC");
+    }
+    
+    if (!$stmt) {
+        return null;
+    }
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $songs = [];
+    while ($row = $result->fetch_assoc()) {
+        $songs[] = $row;
+    }
+    
+    $stmt->close();
+    return $songs;
+}
+
+function getCurrentUserSongs($conn) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return null;
+    }
+    
+    return getAllSongs($conn, $user['userId']);
+}
+
 ?>

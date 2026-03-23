@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../styles/library.css";
+import SongCard from "../other/song_card";
 
 export default function Library({ onNavigate, transitioning }) {
     const [userData, setUserData] = useState({
@@ -7,6 +8,8 @@ export default function Library({ onNavigate, transitioning }) {
         username: "",
         profilePicture: ""
     });
+
+    const [userSongs, setUserSongs] = useState([]);
 
     async function getUserData() {
         try {
@@ -43,12 +46,34 @@ export default function Library({ onNavigate, transitioning }) {
         }
         catch (error) {
             console.error('Fetch error:', error);
-                throw error;
+            throw error;
+        }
+    }
+
+    async function getUserSongs() {
+        try {
+
+            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_current_user_songs.php");
+
+            const data = await response.json();
+
+            if (data.error) {
+                console.log("Failed to fetch songs");
+            }
+            if (data.songs) {
+                setUserSongs(data.songs);
+            }
+
+        }
+        catch (error) {
+            console.error('Fetch error:', error);
+            throw error;
         }
     }
 
     useEffect(function() {
         getUserData();
+        getUserSongs();
     }, []);
 
     return (
@@ -70,7 +95,21 @@ export default function Library({ onNavigate, transitioning }) {
                 <h1> POSTED SONGS </h1>
             </div>
             <div className="posted-songs">
-
+                {
+                    !userSongs.length ? "" :
+                    
+                    (
+                        userSongs.map(song => (
+                            <SongCard 
+                                songId={song.songId} 
+                                songName={song.songName} 
+                                artist={song.artist} 
+                                pathToCover={song.pathToCover}
+                                pathToSong={song.pathToSong}
+                            />
+                        ))
+                    )
+                }
             </div>
             <img 
                 className="button new-button" 

@@ -1,0 +1,41 @@
+.song-card {
+    position: relative;
+
+    width: 110px;
+    height: 140px;
+}
+
+.song-card-cover {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 80%;
+
+    
+}
+
+.song-card-name {
+    position: absolute;
+
+    top: 80%;
+    left: 0;
+
+    width: 100%;
+    height: 20%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    filter: grayscale(10%);
+}

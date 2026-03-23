@@ -103,7 +103,7 @@
     top: 74.5%;
     left: 7.5%;
 
-    width: 75%;
+    width: 72.5%;
     height: 22%;
 
     background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
@@ -113,12 +113,14 @@
     image-rendering: crisp-edges;
     image-rendering: pixelated;
 
-    font-family: "Rye";
-    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; 
     align-items: center;
-    text-align: center;
+    gap: 10px;
+
+    padding: 0 15px;
+    
+    overflow-x: auto; 
 }
 
 .new-button {
