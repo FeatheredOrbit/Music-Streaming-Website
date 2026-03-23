@@ -59,6 +59,26 @@ export default function Library({ onNavigate, transitioning }) {
             <img className="pillars pillar-left" src="assets/shared/background/actual_pillar.png" />
             <img className="pillars pillar-right" src="assets/shared/background/actual_pillar.png" />
 
+            <div className="liked-songs-label">
+                <h1> LIKED SONGS </h1>
+            </div>
+            <div className="liked-songs">
+
+            </div>
+
+            <div className="posted-songs-label">
+                <h1> POSTED SONGS </h1>
+            </div>
+            <div className="posted-songs">
+
+            </div>
+            <img 
+                className="button new-button" 
+                src="assets/shared/buttons/new/default.png" 
+                title="Post new song"
+                onClick={function() { if (!transitioning && userData.loggedIn) { onNavigate("/song-posting") }}}
+            />
+
             <img 
                 className="button home-button" 
                 title="Home" 

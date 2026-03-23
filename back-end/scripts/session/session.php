@@ -185,4 +185,56 @@ function logOut() {
     
     session_destroy();
 }
+
+function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return ['notLoggedIn' => true];
+    }
+    
+    $username = $user['username'];
+    $userId = $user['userId'];
+    $date = date('Y-m-d');
+    $dateTime = date('Y-m-d_H-i-s');
+    
+    $songExtension = pathinfo($songFile['name'], PATHINFO_EXTENSION);
+    $songFilename = $username . '_' . $dateTime . '.' . $songExtension;
+    $songRelativePath = 'Music-Streaming-Website/back-end/uploads/songs/' . $songFilename;
+    $songFullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $songRelativePath;
+    
+    if (!move_uploaded_file($songFile['tmp_name'], $songFullPath)) {
+        return ['uploadFailed' => true];
+    }
+    
+    $coverPath = null;
+    if ($coverFile && $coverFile['error'] !== UPLOAD_ERR_NO_FILE) {
+        $coverExtension = pathinfo($coverFile['name'], PATHINFO_EXTENSION);
+        $coverFilename = $username . '_cover_' . $dateTime . '.' . $coverExtension;
+        $coverRelativePath = 'Music-Streaming-Website/back-end/uploads/covers/' . $coverFilename;
+        $coverFullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $coverRelativePath;
+        
+        if (move_uploaded_file($coverFile['tmp_name'], $coverFullPath)) {
+            $coverPath = $coverRelativePath;
+        }
+    }
+    
+    $stmt = $conn->prepare("INSERT INTO songs (songName, artist, pathToCover, pathToSong, datePosted, uploadedBy) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssi", $songName, $artist, $coverPath, $songRelativePath, $date, $userId);
+    
+    if ($stmt->execute()) {
+
+        $stmt->close();
+        return ['success' => true];
+    } else {
+
+        $stmt->close();
+        
+        unlink($songFullPath);
+        if ($coverPath && file_exists($coverFullPath)) {
+            unlink($coverFullPath);
+        }
+        return ['uploadFailed' => true];
+    }
+}
 ?>

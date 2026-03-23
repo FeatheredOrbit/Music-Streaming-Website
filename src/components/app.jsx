@@ -6,6 +6,7 @@ import Signup from './pages/signup';
 import Login from './pages/login';
 import Account from './pages/account';
 import Library from './pages/library';
+import SongPosting from './pages/song_posting';
 
 export default function App() {
   const navigate = useNavigate();
@@ -136,6 +137,7 @@ export default function App() {
           <Route path="/login" element={<Login onNavigate={ onNavigate} transitioning={ transitioning } />} />
 
           <Route path="/library" element={<Library onNavigate={ onNavigate } transitioning={ transitioning } />} />
+          <Route path="/song-posting" element={<SongPosting onNavigate={ onNavigate } transitioning={ transitioning } />} />
 
           <Route path="/account" element={<Account onNavigate={ onNavigate } transitioning={ transitioning } />} />
         </Routes>

@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS songs (
     songId INT AUTO_INCREMENT PRIMARY KEY,
     songName VARCHAR(255) NOT NULL,
     artist VARCHAR(255) NOT NULL,
-    extra VARCHAR(2048),
-    cover VARCHAR(256)
+    pathToCover VARCHAR(256),
+    pathToSong VARCHAR(256),
     datePosted DATE NOT NULL,
 
     uploadedBy INT NOT NULL,
@@ -33,15 +33,18 @@ CREATE TABLE IF NOT EXISTS songs (
 );
 
 DROP TABLE IF EXISTS likes;
-CREATE TABLE IF NOT EXISTS likes {
-    likedBy INT NOT NULL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS likes (
+    likedBy INT NOT NULL,
+    likedSong INT NOT NULL,
+
+    PRIMARY KEY (likedBy, likedSong),
+
     FOREIGN KEY (likedBy) REFERENCES users(userId)
         ON DELETE CASCADE 
         ON UPDATE CASCADE
     
-    likedSong INT NOT NULL PRIMARY,
     FOREIGN KEY (likedSong) REFERENCES songs(songId)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-}
+);
 

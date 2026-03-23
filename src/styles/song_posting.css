@@ -1,0 +1,136 @@
+@font-face {
+    font-family: "Milker";
+    src: url("assets/fonts/Milker.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PlayfairDisplay";
+    src: url("assets/fonts/PlayfairDisplay.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rye";
+    src: url("assets/fonts/Rye.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.song-post-container {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 35%;
+    width: 80%;
+    height: 60%;
+    min-height: 350px; 
+    min-width: 650px; 
+    transform: translateX(-50%);
+    padding: 2rem;
+    box-sizing: border-box;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.song-cover {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+
+    width: 17.5%;
+    height: 50%;
+}
+
+.song-name-container {
+    position: absolute;
+    left: 18.25%;
+    top: 5%;
+
+    line-height: 0.1;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.artist-container {
+    position: absolute;
+    left: 18.25%;
+    top: 17.5%;
+
+    line-height: 0.1;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.select-song-label {
+    position: absolute;
+
+    left: 1%;
+    top: 52.5%;
+
+    line-height: 0.1;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.song-audio-input {
+    position: absolute;
+
+    left: 1%;
+    top: 65%;
+}
+
+.post-button {
+    position: absolute;
+
+    bottom: 14%;
+    right: 5%;
+
+    aspect-ratio: 1 / 1;
+
+    width: 5%;
+
+    transform: translate(50%, 50%);
+}
+
+.post-button:hover {
+    content: url(assets/shared/buttons/post/hover.png);
+
+    width: 6%;
+}

@@ -1,0 +1,140 @@
+@font-face {
+    font-family: "Milker";
+    src: url("assets/fonts/Milker.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PlayfairDisplay";
+    src: url("assets/fonts/PlayfairDisplay.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rye";
+    src: url("assets/fonts/Rye.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.liked-songs-label {
+    position: absolute;
+    z-index: 3;
+
+    top: 31.5%;
+    left: 15%;
+
+    width: 22.5%;
+    height: 8%;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.liked-songs {
+    position: absolute;
+    z-index: 3;
+
+    top: 40%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 85%;
+    height: 22%;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.posted-songs-label {
+    position: absolute;
+    z-index: 3;
+
+    top: 66%;
+    left: 17.5%;
+
+    width: 25%;
+    height: 8%;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.posted-songs {
+    position: absolute;
+    z-index: 3;
+
+    top: 74.5%;
+    left: 7.5%;
+
+    width: 75%;
+    height: 22%;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.new-button {
+    position: absolute;
+
+    top: 85.5%;
+    left: 87.5%;
+
+    width: 6%;
+    aspect-ratio: 1 / 1;
+
+    transform: translate(-50%, -50%);
+}
+
+.new-button:hover {
+    content: url(assets/shared/buttons/new/hover.png);
+
+    width: 8%;
+}
