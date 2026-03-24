@@ -1,3 +1,8 @@
+// Signup page that creates new user accounts with username and password.
+// Performs a LOT of validation on both client and server sides including password strength,
+// special character requirements, capital letters, and matching password confirmation.
+// Redirects to the account page after successful account creation.
+
 import { useState, useEffect } from "react";
 import "../../styles/signup.css";
 
@@ -16,6 +21,7 @@ export default function Signup({ onNavigate, transitioning }) {
         confirmPassword: ""
     });
 
+    // Updates form state when the user types in any input field.
     function handleInputChange(e) {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -23,6 +29,7 @@ export default function Signup({ onNavigate, transitioning }) {
             [name]: value
         }));
         
+        // Clears the error message for the field being edited.
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -31,6 +38,9 @@ export default function Signup({ onNavigate, transitioning }) {
         }
     };
 
+    // Validates all fields before sending to the server. Checks for empty fields,
+    // username length limits, password length, special characters, capital letters,
+    // and matching confirmation password.
     function validateForm() {
         let isValid = true;
         const newErrors = {
@@ -73,24 +83,24 @@ export default function Signup({ onNavigate, transitioning }) {
         return isValid;
     };
 
+    // Submits the signup data to the server. The server performs additional validation
+    // including checking for existing usernames and password constraints.
     async function handleSignup() {
         if (!transitioning && validateForm()) {
 
             try {
-                // Create form data to send.
                 const dataToSend = new FormData();
-                dataToSend.append('username', formData.username);
-                dataToSend.append('password', formData.password);
-                dataToSend.append('conPassword', formData.confirmPassword);
+                dataToSend.append("username", formData.username);
+                dataToSend.append("password", formData.password);
+                dataToSend.append("conPassword", formData.confirmPassword);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/login-signup/signup.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
                 const data = await response.json();
                 
-                // The backend re-validates the data before inserting it into the database.
                 if (data.usernameInvalid) {
                     setErrors(prev => ({
                         ...prev,
@@ -127,23 +137,22 @@ export default function Signup({ onNavigate, transitioning }) {
                         username: "Username already exists"
                     }));
                 } 
-                // If the signup is successful, throw a message and go to the account page.
                 else if (data.signupSuccessful) {
                     alert("Signup was successful!");
                     onNavigate("/account");
                 } 
-                // if the signup isn't successful, throw a message and stay on the page.
                 else if (!data.signupSuccessful) {
                     alert("Something went wrong during signup");
                 }
 
             } catch (error) {
-                console.error('Signup error:', error);
+                console.error("Signup error:", error);
                 throw error;
             }
         }
     };
 
+    // Checks if the user is already logged in to update the library button state.
     async function checkLogStatus() {
         try {
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
@@ -165,6 +174,7 @@ export default function Signup({ onNavigate, transitioning }) {
         }
     }
     
+    // Runs once when the component mounts to check login status.
     useEffect(function() {
         checkLogStatus();
     }, []);

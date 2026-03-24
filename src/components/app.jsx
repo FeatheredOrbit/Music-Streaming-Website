@@ -1,25 +1,34 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
-import * as React from 'react';
-import Home from './pages/home';
-import Signup from './pages/signup';
-import Login from './pages/login';
-import Account from './pages/account';
-import Library from './pages/library';
-import SongPosting from './pages/song_posting';
-import SongOverlay from './other/song_overlay';
+// Root component that manages global state and routing.
+// The transition animation works by cycling through a sequence of images forward or backward.
+// This creates a frame by frame effect that hides content changes during navigation (gifs didn't work properlu).
+// All animation frames are preloaded to avoid gaps where the background becomes visible.
+
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import * as React from "react";
+import Home from "./pages/home";
+import Signup from "./pages/signup";
+import Login from "./pages/login";
+import Account from "./pages/account";
+import Library from "./pages/library";
+import SongPosting from "./pages/song_posting";
+import SongOverlay from "./other/song_overlay";
 
 export default function App() {
   const navigate = useNavigate();
 
+  // Prevents multiple navigation attempts while an animation is playing.
   const [transitioning, setTransitioning] = React.useState(false);
 
+  // Stores the song currently being played. Also used to hide the overlay when empty.
   const [playingSongData, setPlayingSongData] = React.useState({
     songId: ""
   });
 
+  // Milliseconds between each frame of the transition animation.
   const introDelay = 30;
 
+  // Sequence of images for the transition effect with a "shadow" overlay, if we can call it that.
   const intro = [
     "assets/shared/foreground/intro/intro-0.png",
     "assets/shared/foreground/intro/intro-1.png",
@@ -38,6 +47,7 @@ export default function App() {
     "assets/shared/foreground/intro/intro-14.png"
   ];
 
+  // Same sequence without the shadow overlay, I honestly don't remember why I had 2 copies, I don't want to find out.
   const introShadowless = [
     "assets/shared/foreground/intro_shadowless/intro_shadowless-0.png",
     "assets/shared/foreground/intro_shadowless/intro_shadowless-1.png",
@@ -59,6 +69,7 @@ export default function App() {
   const introRef = useRef(null);
   const introShadowlessRef = useRef(null);
 
+  // Plays the transition animation. When reverse is true, it plays backwards.
   function playIntro(reverse) {
     const max = 14;
     const min = 0;
@@ -91,12 +102,9 @@ export default function App() {
         } , introDelay * i);
       }
     }
-    
-
-
-    
   }
 
+  // Handles navigation between pages. Plays the transition animation before changing routes.
   function onNavigate(route) {
     if (location.pathname === route || transitioning) {
       return;
@@ -115,6 +123,7 @@ export default function App() {
     }, introDelay * 30);
   }
 
+  // Runs once when the app loads. Initializes the database and plays the intro animation.
   useEffect(function() {
     fetch("api/Music-Streaming-Website/back-end/database-initiation/init.php")
     .then(response => response.text())
@@ -171,4 +180,3 @@ export default function App() {
     </>
   );
 }
-

@@ -244,6 +244,22 @@
     text-align: center;
 }
 
+.song-overlay-date-posted {
+    position: absolute;
+
+    top: 77%;
+    left: 2.5%;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    display: flex;
+    font-family: "PlayfairDisplay";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .show-more-button {
     position: absolute;
 

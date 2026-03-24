@@ -1,3 +1,8 @@
+// Song posting page that allows users to upload new tracks with metadata.
+// Users can optionally add a cover image, specify the song name, artist name,
+// and select the audio file. All fields are validated before submission.
+// After successful upload, the user is redirected to the library page.
+
 import { useEffect, useRef, useState } from "react";
 import "../../styles/song_posting.css";
 
@@ -21,6 +26,7 @@ export default function SongPosting({ onNavigate, transitioning }) {
         coverFile: null
    });
 
+    // Fetches current user data to display the navigation buttons correctly.
     async function getUserData() {
         try {
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
@@ -69,21 +75,24 @@ export default function SongPosting({ onNavigate, transitioning }) {
             }
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
             throw error;
         }
     }
 
+    // Loads user data when the component mounts.
     useEffect(function() {
         getUserData();
     }, []);
 
+    // Handles cover image selection with file type and size validation.
+    // Creates a preview URL to render it immediately for the nice feedback.
     function changeCoverImage(event) {
         const file = event.target.files[0];
 
         if (!file) return;
 
-        if (!file.type.startsWith('image/')) {
+        if (!file.type.startsWith("image/")) {
             alert("Please select an image file");
             return;
         }
@@ -101,6 +110,7 @@ export default function SongPosting({ onNavigate, transitioning }) {
         }));
     }
 
+    // Prompts the user for a song name and validates it.
     function changeSongName() {
         while (true) {
             const name = prompt("Insert song name:");
@@ -123,6 +133,7 @@ export default function SongPosting({ onNavigate, transitioning }) {
         }
     }
 
+    // Prompts the user for an artist name and validates it.
     function changeArtistName() {
         while (true) {
             const artist = prompt("Insert artist name:");
@@ -145,12 +156,13 @@ export default function SongPosting({ onNavigate, transitioning }) {
         }
     }
 
+    // Handles audio file selection with file type validation.
     function changeSongFile(event) {
         const file = event.target.files[0];
 
         if (!file) return;
 
-        if (!file.type.startsWith('audio/')) {
+        if (!file.type.startsWith("audio/")) {
             alert("Please select an audio file");
             return;
         }
@@ -161,6 +173,8 @@ export default function SongPosting({ onNavigate, transitioning }) {
         }));
     }
 
+    // Validates all fields and submits the song data to the server.
+    // The server handles file uploads and database insertion.
     async function postSong() {
         if (!songData.songName) {
             alert("You must input a name for the song");
@@ -187,7 +201,7 @@ export default function SongPosting({ onNavigate, transitioning }) {
             }
 
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/upload_song.php", {
-                method: 'POST',
+                method: "POST",
                 body: dataToSend
             });
 
@@ -247,7 +261,7 @@ export default function SongPosting({ onNavigate, transitioning }) {
                 <input
                     type="file"
                     accept="image/*"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     ref={songCoverInputRef}
                     onChange={changeCoverImage}
                 />  

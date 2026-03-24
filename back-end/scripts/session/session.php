@@ -1,11 +1,14 @@
 <?php
+// Core session and user management functions for my website!
+// Handles everything from session security to user data manipulation, song operations,
+// and database queries for retrieving songs with like counts and user-specific status.
 
 // Function that starts a sessions with all the appropriate settings for security.
 function startSession() {
     session_set_cookie_params(
         3600, // It lasts an hour.
-        '/',
-        $_SERVER['HTTP_HOST'],
+        "/",
+        $_SERVER["HTTP_HOST"],
         true, // It will send only over HTTPS, so it's encrypted.
         true // Can't be accessed through Javascript, such as through "document.cookie".
     );
@@ -14,22 +17,22 @@ function startSession() {
     session_start();
     
     // Code that avoid session fixation by regenerating a session id every 30 minutes.
-    if (!isset($_SESSION['created'])) {
-        $_SESSION['created'] = time();
+    if (!isset($_SESSION["created"])) {
+        $_SESSION["created"] = time();
 
-    } else if (time() - $_SESSION['created'] > 1800) {
+    } else if (time() - $_SESSION["created"] > 1800) {
         session_regenerate_id(true);
-        $_SESSION['created'] = time();
+        $_SESSION["created"] = time();
     }
 }
 
 // Function that gets the current user by using the stored id and a database connection to extract user data.
 function getCurrentUser($conn) {
-    if (!isset($_SESSION['user_id'])) {
+    if (!isset($_SESSION["user_id"])) {
         return null;
     }
 
-    $user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION["user_id"];
 
     $stmt = $conn->prepare("SELECT userId, username, dateJoined, encryptedPassword, pathToProfilePicture, extra FROM users WHERE userId = ? LIMIT 1");
     $stmt->bind_param("i", $user_id);
@@ -44,7 +47,7 @@ function getCurrentUser($conn) {
     $user = $result->fetch_assoc();
 
     if (!$user) {
-        unset($_SESSION['user_id']);
+        unset($_SESSION["user_id"]);
         return null;
     }
 
@@ -53,6 +56,7 @@ function getCurrentUser($conn) {
     return $user;
 }
 
+// Updates the user's username after checking for uniqueness.
 function changeUsername($conn, $username) {
     $user = getCurrentUser($conn);
 
@@ -60,6 +64,7 @@ function changeUsername($conn, $username) {
         return ["notLoggedIn" => true];
     }
 
+    // Verifies the new username is not already taken by another user.
     $checkStmt = $conn->prepare("SELECT userId FROM users WHERE username = ? AND userId != ?");
     $checkStmt->bind_param("si", $username, $user["userId"]);
     $checkStmt->execute();
@@ -85,6 +90,7 @@ function changeUsername($conn, $username) {
     return $result;
 }
 
+// Updates the user's password with a new hashed value.
 function changePassword($conn, $password) {
     $user = getCurrentUser($conn);
 
@@ -108,6 +114,7 @@ function changePassword($conn, $password) {
     return $result;
 }
 
+// Updates the user's extra information field.
 function changeExtraInformation($conn, $information) {
     $user = getCurrentUser($conn);
 
@@ -129,6 +136,7 @@ function changeExtraInformation($conn, $information) {
     return $result;
 }
 
+// Handles profile picture upload and updates the database with the new file path.
 function uploadProfilePicture($conn, $file) {
     $user = getCurrentUser($conn);
     
@@ -136,20 +144,20 @@ function uploadProfilePicture($conn, $file) {
         return null;
     }
     
-    $username = $user['username'];
-    $userId = $user['userId'];
+    $username = $user["username"];
+    $userId = $user["userId"];
     
-    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $extension = pathinfo($file["name"], PATHINFO_EXTENSION);
     
-    $date = date('Y-m-d_H-i-s');
-    $filename = $username . '_' . $date . '.' . $extension;
+    $date = date("Y-m-d_H-i-s");
+    $filename = $username . "_" . $date . "." . $extension;
     
-    $relativePath = 'Music-Streaming-Website/back-end/uploads/pfp/' . $filename;
-    $fullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;
+    $relativePath = "Music-Streaming-Website/back-end/uploads/pfp/" . $filename;
+    $fullPath = $_SERVER["DOCUMENT_ROOT"] . "/" . $relativePath;
     
-    if (move_uploaded_file($file['tmp_name'], $fullPath)) {
+    if (move_uploaded_file($file["tmp_name"], $fullPath)) {
 
-        $pathToStore = 'Music-Streaming-Website/back-end/uploads/pfp/' . $filename;
+        $pathToStore = "Music-Streaming-Website/back-end/uploads/pfp/" . $filename;
         $stmt = $conn->prepare("UPDATE users SET pathToProfilePicture = ? WHERE userId = ?");
         $stmt->bind_param("si", $pathToStore, $userId);
         
@@ -167,6 +175,7 @@ function uploadProfilePicture($conn, $file) {
     return null;
 }
 
+// Sets the user ID in the session to mark the user as logged in.
 function logIn($id) {
     $_SESSION["user_id"] = $id;
 }
@@ -177,7 +186,7 @@ function logOut() {
     
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
+        setcookie(session_name(), "", time() - 42000,
             $params["path"], $params["domain"],
             $params["secure"], $params["httponly"]
         );
@@ -186,6 +195,7 @@ function logOut() {
     session_destroy();
 }
 
+// Permanently removes the current user and all associated data from the database.
 function deleteCurrentUser($conn) {
     $user = getCurrentUser($conn);
     
@@ -193,7 +203,7 @@ function deleteCurrentUser($conn) {
         return ["notLoggedIn" => true];
     }
     
-    $userId = $user['userId'];
+    $userId = $user["userId"];
     
     $stmt = $conn->prepare("DELETE FROM users WHERE userId = ?");
     $stmt->bind_param("i", $userId);
@@ -201,42 +211,43 @@ function deleteCurrentUser($conn) {
     if ($stmt->execute()) {
         $stmt->close();
         logOut();
-        return ['success' => true];
+        return ["success" => true];
     } else {
         $stmt->close();
-        return ['success' => false];
+        return ["success" => false];
     }
 }
 
+// Uploads a song and optional cover image to the server and stores metadata in the database.
 function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
     $user = getCurrentUser($conn);
     
     if (!$user) {
-        return ['notLoggedIn' => true];
+        return ["notLoggedIn" => true];
     }
     
-    $username = $user['username'];
-    $userId = $user['userId'];
-    $date = date('Y-m-d');
-    $dateTime = date('Y-m-d_H-i-s');
+    $username = $user["username"];
+    $userId = $user["userId"];
+    $date = date("Y-m-d");
+    $dateTime = date("Y-m-d_H-i-s");
     
-    $songExtension = pathinfo($songFile['name'], PATHINFO_EXTENSION);
-    $songFilename = $username . '_' . $dateTime . '.' . $songExtension;
-    $songRelativePath = 'Music-Streaming-Website/back-end/uploads/songs/' . $songFilename;
-    $songFullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $songRelativePath;
+    $songExtension = pathinfo($songFile["name"], PATHINFO_EXTENSION);
+    $songFilename = $username . "_" . $dateTime . "." . $songExtension;
+    $songRelativePath = "Music-Streaming-Website/back-end/uploads/songs/" . $songFilename;
+    $songFullPath = $_SERVER["DOCUMENT_ROOT"] . "/" . $songRelativePath;
     
-    if (!move_uploaded_file($songFile['tmp_name'], $songFullPath)) {
-        return ['uploadFailed' => true];
+    if (!move_uploaded_file($songFile["tmp_name"], $songFullPath)) {
+        return ["uploadFailed" => true];
     }
     
     $coverPath = null;
-    if ($coverFile && $coverFile['error'] !== UPLOAD_ERR_NO_FILE) {
-        $coverExtension = pathinfo($coverFile['name'], PATHINFO_EXTENSION);
-        $coverFilename = $username . '_cover_' . $dateTime . '.' . $coverExtension;
-        $coverRelativePath = 'Music-Streaming-Website/back-end/uploads/covers/' . $coverFilename;
-        $coverFullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $coverRelativePath;
+    if ($coverFile && $coverFile["error"] !== UPLOAD_ERR_NO_FILE) {
+        $coverExtension = pathinfo($coverFile["name"], PATHINFO_EXTENSION);
+        $coverFilename = $username . "_cover_" . $dateTime . "." . $coverExtension;
+        $coverRelativePath = "Music-Streaming-Website/back-end/uploads/covers/" . $coverFilename;
+        $coverFullPath = $_SERVER["DOCUMENT_ROOT"] . "/" . $coverRelativePath;
         
-        if (move_uploaded_file($coverFile['tmp_name'], $coverFullPath)) {
+        if (move_uploaded_file($coverFile["tmp_name"], $coverFullPath)) {
             $coverPath = $coverRelativePath;
         }
     }
@@ -247,7 +258,7 @@ function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
     if ($stmt->execute()) {
 
         $stmt->close();
-        return ['success' => true];
+        return ["success" => true];
     } else {
 
         $stmt->close();
@@ -256,18 +267,19 @@ function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
         if ($coverPath && file_exists($coverFullPath)) {
             unlink($coverFullPath);
         }
-        return ['uploadFailed' => true];
+        return ["uploadFailed" => true];
     }
 }
 
+// Deletes a song only if the current user is the uploader.
 function deleteSong($conn, $songId) {
     $user = getCurrentUser($conn);
     
     if (!$user) {
-        return ['notLoggedIn' => true];
+        return ["notLoggedIn" => true];
     }
     
-    $userId = $user['userId'];
+    $userId = $user["userId"];
     
     $stmt = $conn->prepare("DELETE FROM songs WHERE songId = ? AND uploadedBy = ?");
     $stmt->bind_param("ii", $songId, $userId);
@@ -277,25 +289,25 @@ function deleteSong($conn, $songId) {
         $stmt->close();
         
         if ($affectedRows > 0) {
-            return ['success' => true];
+            return ["success" => true];
         } else {
-            return ['notOwner' => true];
+            return ["notOwner" => true];
         }
     } else {
         $stmt->close();
-        return ['error' => true];
+        return ["error" => true];
     }
 }
 
-
+// Toggles a user's like on a song. Adds a like if not present, removes it if already liked.
 function toggleLike($conn, $songId) {
     $user = getCurrentUser($conn);
     
     if (!$user) {
-        return ['notLoggedIn' => true];
+        return ["notLoggedIn" => true];
     }
     
-    $userId = $user['userId'];
+    $userId = $user["userId"];
     
     $checkStmt = $conn->prepare("SELECT * FROM likes WHERE likedBy = ? AND likedSong = ?");
     $checkStmt->bind_param("ii", $userId, $songId);
@@ -312,9 +324,9 @@ function toggleLike($conn, $songId) {
         $stmt->close();
 
         if ($result) {
-            return ['success' => true, 'unliked' => true];
+            return ["success" => true, "unliked" => true];
         } else {
-            return ['success' => false];
+            return ["success" => false];
         }
     } else {
         $stmt = $conn->prepare("INSERT INTO likes (likedBy, likedSong) VALUES (?, ?)");
@@ -323,18 +335,20 @@ function toggleLike($conn, $songId) {
         $stmt->close();
 
         if ($result) {
-            return ['success' => true, 'liked' => true];
+            return ["success" => true, "liked" => true];
         } else {
-            return ['success' => false];
+            return ["success" => false];
         }
     }
 }
 
+// Retrieves all songs, optionally filtered by a specific user.
+// Includes like counts and whether the current user has liked each song.
 function getAllSongs($conn, $userId = null) {
     $currentUserId = null;
     $user = getCurrentUser($conn);
     if ($user) {
-        $currentUserId = $user['userId'];
+        $currentUserId = $user["userId"];
     }
     
     if ($userId) {
@@ -386,6 +400,7 @@ function getAllSongs($conn, $userId = null) {
     return $songs;
 }
 
+// Retrieves all songs liked by the current user.
 function getCurrentUserLikedSongs($conn) {
     $user = getCurrentUser($conn);
     
@@ -393,7 +408,7 @@ function getCurrentUserLikedSongs($conn) {
         return null;
     }
     
-    $currentUserId = $user['userId'];
+    $currentUserId = $user["userId"];
     
     $stmt = $conn->prepare("
         SELECT s.*, u.username as uploadedByUsername,
@@ -426,6 +441,7 @@ function getCurrentUserLikedSongs($conn) {
     return $songs;
 }
 
+// Retrieves all songs uploaded by the current user.
 function getCurrentUserSongs($conn) {
     $user = getCurrentUser($conn);
     
@@ -433,14 +449,16 @@ function getCurrentUserSongs($conn) {
         return null;
     }
     
-    return getAllSongs($conn, $user['userId']);
+    return getAllSongs($conn, $user["userId"]);
 }
 
+// Retrieves every song in the database regardless of uploader.
+// Used for the home page feed.
 function getAbsolutelyAllSongs($conn) {
     $currentUserId = null;
     $user = getCurrentUser($conn);
     if ($user) {
-        $currentUserId = $user['userId'];
+        $currentUserId = $user["userId"];
     }
     
     $stmt = $conn->prepare("

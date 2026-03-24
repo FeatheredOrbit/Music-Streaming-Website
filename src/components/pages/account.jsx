@@ -1,6 +1,12 @@
+// Account page that displays and manages user profile information.
+// Users can view their username, join date, extra information, and profile picture.
+// You can change almost anything by clicking on any editable field, but not before a password validation prompt.
+// Dedicated buttons are provided for changing password, logging out, and deleting the account.
+
 import { useEffect, useRef, useState } from "react";
 import "../../styles/account.css";
 
+// Defines the different types of actions that require password validation, this way I don't need multiple password validation functions.
 const InputChangeType = {
     PFP : "pfp",
     USERNAME : "username",
@@ -20,6 +26,7 @@ export default function Account({ onNavigate, transitioning }) {
         profilePicture: ""
     });
 
+    // Fetches current user data from the server and updates the state.
     async function getUserData() {
         try {
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
@@ -68,21 +75,23 @@ export default function Account({ onNavigate, transitioning }) {
             }
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
             throw error;
         }
     }
 
+    // Loads user data when the component first mounts.
     useEffect(function() {
         getUserData();
     }, []);
 
+    // Handles profile picture upload. Validates file type and size before sending to the server.
     async function changeAccountPicture(event) {
         const file = event.target.files[0];
 
         if (!file) return;
 
-        if (!file.type.startsWith('image/')) {
+        if (!file.type.startsWith("image/")) {
             alert("Please select an image file");
             return;
         }
@@ -98,7 +107,7 @@ export default function Account({ onNavigate, transitioning }) {
             dataToSend.append("profilePicture", file);
 
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/change_profile_picture.php", {
-                method: 'POST',
+                method: "POST",
                 body: dataToSend
             });
 
@@ -126,6 +135,7 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
+    // Changes the username after validating input. Uses a loop to handle multiple attempts at validation.
     async function changeUsername() {
         while (true) {
             const username = prompt("Please insert new username:");
@@ -149,7 +159,7 @@ export default function Account({ onNavigate, transitioning }) {
                 dataToSend.append("username", username);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/change_username.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
@@ -201,6 +211,7 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
+    // Updates the extra information field for the user profile.
     async function changeExtraInfo() {
         const information = prompt("Insert new information:");
 
@@ -214,7 +225,7 @@ export default function Account({ onNavigate, transitioning }) {
             dataToSend.append("extraInfo", information);
 
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/change_extra_info.php", {
-                method: 'POST',
+                method: "POST",
                 body: dataToSend
             });
 
@@ -241,6 +252,7 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
+    // Changes the user password with all required validation, that being password length and complexity.
     async function changePassword() {
         while (true) {
             const password = prompt("Insert new password:");
@@ -275,7 +287,7 @@ export default function Account({ onNavigate, transitioning }) {
                 dataToSend.append("password", password);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/change_password.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
@@ -314,6 +326,7 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
+    // Verifies the user password before allowing any editing of the user account, or worse ... deletion.
     async function validatePassword(request) {
         while (true) {
             let password;
@@ -339,7 +352,7 @@ export default function Account({ onNavigate, transitioning }) {
                 dataToSend.append("password", password);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/validate/validate_password.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
@@ -376,13 +389,14 @@ export default function Account({ onNavigate, transitioning }) {
                 }
             }
             catch (error) {
-                console.error('Fetch error:', error);
+                console.error("Fetch error:", error);
                 alert("An error occurred. Please try again.");
                 return;
             }
         }
     }
 
+    // Ends the user session and redirects to the home page.
     async function logOutClicked() {
         const message = confirm("Are you sure you want to log out?");
 
@@ -402,6 +416,7 @@ export default function Account({ onNavigate, transitioning }) {
         }
     }
 
+    // Permanently removes the user account and all associated data.
     async function deleteAccount() {
         const response = confirm("Are you sure you want to delete your account? This action cannot be undone");
 
@@ -436,7 +451,7 @@ export default function Account({ onNavigate, transitioning }) {
             <div className="account-container">
                 <input
                     type="file"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     ref={accountPictureInputRef}
                     accept="image/*"
                     onChange={changeAccountPicture}

@@ -1,3 +1,7 @@
+// Login page that authenticates users with username and password credentials.
+// Validates input fields locally before sending to the server for verification.
+// Redirects to the account page upon successful login.
+
 import { useEffect, useState } from "react";
 import "../../styles/login.css";
 
@@ -14,6 +18,7 @@ export default function Login({ onNavigate, transitioning }) {
         password: ""
     });
 
+    // Updates form state when the user types in any input field.
     function handleInputChange(e) {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -21,6 +26,7 @@ export default function Login({ onNavigate, transitioning }) {
             [name]: value
         }));
         
+        // Clears the error message for the field being edited.
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -29,6 +35,7 @@ export default function Login({ onNavigate, transitioning }) {
         }
     };
 
+    // Checks that both username and password fields have been filled.
     function validateForm() {
         let isValid = true;
         const newErrors = {
@@ -50,23 +57,22 @@ export default function Login({ onNavigate, transitioning }) {
         return isValid;
     };
 
+    // Submits the login credentials to the server for verification.
     async function handleLogin() {
         if (!transitioning && validateForm()) {
 
             try {
-                // Create form data to send.
                 const dataToSend = new FormData();
-                dataToSend.append('username', formData.username);
-                dataToSend.append('password', formData.password);
+                dataToSend.append("username", formData.username);
+                dataToSend.append("password", formData.password);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/login-signup/login.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
                 const data = await response.json();
 
-                // The backend validates the data before considering the login successful.
                 if (data.usernameError) {
                     setErrors(prev => ({
                         ...prev,
@@ -89,12 +95,13 @@ export default function Login({ onNavigate, transitioning }) {
                 
 
             } catch (error) {
-                console.error('Login error:', error);
+                console.error("Login error:", error);
                 throw error;
             }
         }
     };
 
+    // Checks if the user is already logged in to update the library button state.
     async function checkLogStatus() {
         try {
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
@@ -116,6 +123,7 @@ export default function Login({ onNavigate, transitioning }) {
         }
     }
 
+    // Runs once when the component mounts to check login status.
     useEffect(function() {
         checkLogStatus();
     }, []);

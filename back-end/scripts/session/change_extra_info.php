@@ -1,4 +1,6 @@
 <?php
+// Endpoint for updating the user's extra information field.
+// Takes the new information from the POST request and applies it to the current user's profile.
 
 require_once "session.php";
 

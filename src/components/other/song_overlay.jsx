@@ -1,3 +1,9 @@
+// Global playback overlay that appears when a song is selected from any page.
+// Displays an audio player with play, pause, seek controls, and time indicators.
+// Shows song metadata including cover art, title, artist, uploader, and date.
+// Allows users to like or unlike songs and delete their own uploaded tracks.
+// Password validation is required before deleting a song for security.
+
 import { useState, useRef, useEffect } from "react";
 import "../../styles/song_overlay.css";
 
@@ -13,6 +19,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
 
+    // Fetches the full song data whenever a new song is selected.
     useEffect(() => {
         if (!playingSongData.songId) {
             setSongData(null);
@@ -23,6 +30,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
 
     }, [playingSongData.songId]);
 
+    // Retrieves song details including like count and whether the current user has liked it.
     async function fetchSong() {
             try {
 
@@ -30,7 +38,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
                 dataToSend.append("songId", playingSongData.songId);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_specific_song.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
@@ -47,6 +55,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
             }
         }
 
+    // Resets the audio player when switching between songs.
     useEffect(() => {
         setIsPlaying(false);
         setElapsedTime("0");
@@ -56,6 +65,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
         }
     }, [playingSongData.songId]);
 
+    // Toggles between playing and pausing the current song.
     function togglePlay() {
         if (!songRef.current) return;
 
@@ -68,6 +78,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
         setIsPlaying(!isPlaying);
     }
 
+    // Converts seconds into a minutes:seconds format for display.
     function formatTime(time) {
         if (!time || isNaN(time)) return "0:00";
         const minutes = Math.floor(time / 60);
@@ -75,6 +86,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
         return `${minutes}:${seconds}`;
     }
 
+    // Sends a like or unlike request to the server and updates the local state.
     async function likeSong() {
         if (!songData) return;
         
@@ -83,7 +95,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
             dataToSend.append("songId", Number(songData.songId));
 
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/like_song.php", {
-                method: 'POST',
+                method: "POST",
                 body: dataToSend
             });
 
@@ -108,6 +120,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
         }
     }
 
+    // Prompts for password verification before allowing song deletion.
     async function validatePassword() {
         while (true) {
 
@@ -128,7 +141,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
                 dataToSend.append("password", password);
 
                 const response = await fetch("api/Music-Streaming-Website/back-end/scripts/validate/validate_password.php", {
-                    method: 'POST',
+                    method: "POST",
                     body: dataToSend
                 });
 
@@ -151,13 +164,14 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
                 }
             }
             catch (error) {
-                console.error('Fetch error:', error);
+                console.error("Fetch error:", error);
                 alert("An error occurred. Please try again.");
                 return;
             }
         }
     }
 
+    // Deletes the current song after ownership verification.
     async function deleteSong() {
         const response = confirm("Are you sure you want to delete the song? This action cannot be undone");
 
@@ -168,7 +182,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
             dataToSend.append("songId", playingSongData.songId);
 
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/delete_song.php", {
-                method: 'POST',
+                method: "POST",
                 body: dataToSend
             });
 
@@ -203,6 +217,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
         }
     }
 
+    // Cleans up the audio element when the overlay unmounts to prevent memory leaks (the tab kept crashing).
     useEffect(() => {
         return () => {
             if (songRef.current) {
@@ -225,7 +240,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
             />
 
             <div className="song-overlay">
-                <img className="song-overlay-image" src="assets/shared/foreground/song_overlay.png" />
+                <img className="song-overlay-image" src={"assets/shared/foreground/song_overlay.png"} />
 
                 <img 
                     src="assets/shared/buttons/play/default.png" 
@@ -290,6 +305,7 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
                         <p className="song-overlay-name">Song Name: {songData.songName}</p>
                         <p className="song-overlay-artist">Artist: {songData.artist}</p>
                         <p className="song-overlay-uploaded-by">Uploaded By: {songData.uploadedByUsername}</p>
+                        <p className="song-overlay-date-posted"> Date Posted: {songData.datePosted} </p>
                     </div>
                 )}
             </div>

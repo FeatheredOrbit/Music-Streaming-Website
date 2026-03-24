@@ -1,4 +1,6 @@
 <?php
+// Password verification script used before allowing sensitive actions like profile changes
+// or account deletion. Compares the provided password against the current user's stored hash.
 
 require_once "../session/session.php";
 
@@ -14,6 +16,7 @@ require_once "../database-connection/conn.php";
 
 $user_data = getCurrentUser($conn);
 
+// Ensures the user is logged in before attempting verification.
 if (!isset($user_data)) {
     $res["notLoggedIn"] = true;
     echo json_encode($res);

@@ -1,3 +1,6 @@
+// Home page that displays absolutely every song (not very efficient but welllllllll).
+// Clicking a song card opens the playback overlay.
+
 import { useEffect, useState } from "react";
 import "../../styles/home.css";
 import SongCard from "../other/song_card";
@@ -11,6 +14,7 @@ export default function Home({ onNavigate, transitioning, playingSongData, setPl
 
     const [songs, setSongs] = useState([]);
 
+    // Retrieves the current user's basic information for the navigation buttons.
     async function getUserData() {
         try {
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
@@ -45,11 +49,12 @@ export default function Home({ onNavigate, transitioning, playingSongData, setPl
             }
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
                 throw error;
         }
     }
 
+    // Fetches every song from the database.
     async function getAllSongs() {
         try {
 
@@ -66,11 +71,12 @@ export default function Home({ onNavigate, transitioning, playingSongData, setPl
 
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
             throw error;
         }
     }
 
+    // Loads user data and songs when the component mounts.
     useEffect(function() {
         getUserData();
         getAllSongs();

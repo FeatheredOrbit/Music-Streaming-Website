@@ -1,8 +1,7 @@
 <?php
-
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+    // Database connection convenience file.
+    // Creates a MySQL connection with credentials and selects the music database.
+    // This file is included by all other PHP scripts to avoid repeating connection logic.
 
     $servername = "localhost";
     $db_user = "root";

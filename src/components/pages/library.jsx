@@ -1,3 +1,7 @@
+// Library page that displays the user's uploaded songs and liked songs in separate sections.
+// Fetches both collections from the server and renders them using the SongCard component.
+// Includes a button to navigate to the song posting page for creating new tracks.
+
 import { useEffect, useState } from "react";
 import "../../styles/library.css";
 import SongCard from "../other/song_card";
@@ -12,6 +16,7 @@ export default function Library({ onNavigate, transitioning, playingSongData, se
     const [userSongs, setUserSongs] = useState([]);
     const [likedSongs, setLikedSongs] = useState([]);
 
+    // Retrieves the current user's information for the navigation buttons.
     async function getUserData() {
         try {
             const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_user_data.php");
@@ -46,11 +51,12 @@ export default function Library({ onNavigate, transitioning, playingSongData, se
             }
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
             throw error;
         }
     }
 
+    // Fetches songs uploaded by the user.
     async function getUserSongs() {
         try {
 
@@ -67,11 +73,12 @@ export default function Library({ onNavigate, transitioning, playingSongData, se
 
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
             throw error;
         }
     }
 
+    // Fetches songs that the user has liked.
     async function getLikedSongs() {
         try {
 
@@ -88,11 +95,12 @@ export default function Library({ onNavigate, transitioning, playingSongData, se
 
         }
         catch (error) {
-            console.error('Fetch error:', error);
+            console.error("Fetch error:", error);
             throw error;
         }
     }
 
+    // Loads all data when the component mounts.
     useEffect(function() {
         getUserData();
         getUserSongs();
