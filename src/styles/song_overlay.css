@@ -103,6 +103,33 @@
     transform: translate(-50%, -50%) scale(1.12);
 }
 
+.delete-button {
+    position: absolute;
+
+    right: 5%;
+    top: 37.5%;
+
+    width: 4%;
+    height: 50%;
+
+    transform: translate(50%, -50%);
+
+    z-index: 10;
+
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+
+    transition: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(.21,.94,.59,2.33);
+}
+
+.delete-button:hover {
+    content: url(assets/shared/buttons/delete/hover.png);
+
+    transform: translate(50%, -50%) scale(1.12);
+}
+
 .pause-button {
     position: absolute;
 

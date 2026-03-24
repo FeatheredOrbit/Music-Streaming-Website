@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import "../../styles/song_overlay.css";
 
-export default function SongOverlay({ playingSongData, setPlayingSongData }) {
+export default function SongOverlay({onNavigate, playingSongData, setPlayingSongData }) {
     const songRef = useRef(null);
-    const [loading, setLoading] = useState(false);
     
     const [songData, setSongData] = useState(null);
     
@@ -109,6 +108,101 @@ export default function SongOverlay({ playingSongData, setPlayingSongData }) {
         }
     }
 
+    async function validatePassword() {
+        while (true) {
+
+            const password = prompt("Insert password:");
+            
+
+            if (password === null) {
+                return;
+            }
+
+            if (password.trim() === "") {
+                alert("Password can't be empty");
+                continue;
+            }
+
+            try {
+                const dataToSend = new FormData();
+                dataToSend.append("password", password);
+
+                const response = await fetch("api/Music-Streaming-Website/back-end/scripts/validate/validate_password.php", {
+                    method: 'POST',
+                    body: dataToSend
+                });
+
+                const data = await response.json();
+
+                if (data.notLoggedIn) {
+                    alert("User is not logged in");
+                    onNavigate("/");
+                    return;
+                }
+
+                if (data.passwordResult) {
+                    deleteSong();
+
+                    return;
+                }
+                else {
+                    alert("Password doesn't match");
+                    continue;
+                }
+            }
+            catch (error) {
+                console.error('Fetch error:', error);
+                alert("An error occurred. Please try again.");
+                return;
+            }
+        }
+    }
+
+    async function deleteSong() {
+        const response = confirm("Are you sure you want to delete the song? This action cannot be undone");
+
+        if (!response) {return; }
+
+        try {
+            const dataToSend = new FormData();
+            dataToSend.append("songId", playingSongData.songId);
+
+            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/delete_song.php", {
+                method: 'POST',
+                body: dataToSend
+            });
+
+            const data = await response.json();
+
+            if (data.notLoggedIn) {
+                alert("User is not logged in");
+                return;
+            }
+
+            if (data.notOwner) {
+                alert("You are not the uploader of the song");
+                return;
+            }
+
+            if (data.error) {
+                alert("Failed to delete song");
+            }
+
+            if (data.success) {
+                alert("Song deleted succesfully, enjoy not listening to your song");
+                setPlayingSongData(prev => ({
+                    ...prev,
+                    songId: ""
+                }));
+
+                onNavigate("/account");
+            }
+        }
+        catch (error) {
+            console.log("Fetch error:", error);
+        }
+    }
+
     useEffect(() => {
         return () => {
             if (songRef.current) {
@@ -131,13 +225,13 @@ export default function SongOverlay({ playingSongData, setPlayingSongData }) {
             />
 
             <div className="song-overlay">
-                <img className="song-overlay-image" src="assets/shared/foreground/song_overlay.png" alt="overlay" />
+                <img className="song-overlay-image" src="assets/shared/foreground/song_overlay.png" />
 
                 <img 
                     src="assets/shared/buttons/play/default.png" 
                     className={isPlaying ? "pause-button" : "play-button"} 
                     onClick={togglePlay}
-                    alt={isPlaying ? "pause" : "play"}
+                    title={isPlaying ? "Pause" : "Play"}
                 />
 
                 <input 
@@ -157,6 +251,13 @@ export default function SongOverlay({ playingSongData, setPlayingSongData }) {
 
                 <p className="song-time"> {formatTime(songTime)} </p>
                 <p className="elapsed-time"> {formatTime(elapsedTime)} </p>
+
+                <img 
+                    className="delete-button"
+                    src="assets/shared/buttons/delete/default.png" 
+                    title="Delete Song"
+                    onClick={validatePassword}
+                />
             </div>
 
             <div className="like-overlay">
@@ -167,7 +268,7 @@ export default function SongOverlay({ playingSongData, setPlayingSongData }) {
                     src="assets/shared/buttons/like/default.png" 
                     is_liked={isLiked.toString()}
                     onClick={likeSong}
-                    alt="like"
+                    title={isLiked ? "Unlike" : "Like"}
                 />
             </div>
 
@@ -176,7 +277,7 @@ export default function SongOverlay({ playingSongData, setPlayingSongData }) {
                     className={extraInfoOpen ? "show-less-button" : "show-more-button"} 
                     src="assets/shared/buttons/arrow/default.png" 
                     onClick={() => setExtraInfoOpen(!extraInfoOpen)}
-                    alt="toggle info"
+                    title={!extraInfoOpen ? "Show More Info" : "Show Less Info"}
                 />
 
                 {extraInfoOpen && (
@@ -184,7 +285,7 @@ export default function SongOverlay({ playingSongData, setPlayingSongData }) {
                         <img 
                             className="song-overlay-cover" 
                             src={songData.pathToCover ? `api/${songData.pathToCover}` : "assets/shared/icons/main/sizes/main16x16.png"} 
-                            alt="cover"
+                            
                         />
                         <p className="song-overlay-name">Song Name: {songData.songName}</p>
                         <p className="song-overlay-artist">Artist: {songData.artist}</p>

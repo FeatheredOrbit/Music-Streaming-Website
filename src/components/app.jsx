@@ -140,6 +140,7 @@ export default function App() {
           key={playingSongData.songId}
           playingSongData={playingSongData} 
           setPlayingSongData={setPlayingSongData}
+          onNavigate={onNavigate}
         />
       )}
       

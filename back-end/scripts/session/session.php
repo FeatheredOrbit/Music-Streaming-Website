@@ -260,6 +260,34 @@ function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
     }
 }
 
+function deleteSong($conn, $songId) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return ['notLoggedIn' => true];
+    }
+    
+    $userId = $user['userId'];
+    
+    $stmt = $conn->prepare("DELETE FROM songs WHERE songId = ? AND uploadedBy = ?");
+    $stmt->bind_param("ii", $songId, $userId);
+    
+    if ($stmt->execute()) {
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+        
+        if ($affectedRows > 0) {
+            return ['success' => true];
+        } else {
+            return ['notOwner' => true];
+        }
+    } else {
+        $stmt->close();
+        return ['error' => true];
+    }
+}
+
+
 function toggleLike($conn, $songId) {
     $user = getCurrentUser($conn);
     
