@@ -186,6 +186,28 @@ function logOut() {
     session_destroy();
 }
 
+function deleteCurrentUser($conn) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return ["notLoggedIn" => true];
+    }
+    
+    $userId = $user['userId'];
+    
+    $stmt = $conn->prepare("DELETE FROM users WHERE userId = ?");
+    $stmt->bind_param("i", $userId);
+    
+    if ($stmt->execute()) {
+        $stmt->close();
+        logOut();
+        return ['success' => true];
+    } else {
+        $stmt->close();
+        return ['success' => false];
+    }
+}
+
 function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
     $user = getCurrentUser($conn);
     
@@ -238,29 +260,132 @@ function uploadSong($conn, $songFile, $coverFile, $songName, $artist) {
     }
 }
 
+function toggleLike($conn, $songId) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return ['notLoggedIn' => true];
+    }
+    
+    $userId = $user['userId'];
+    
+    $checkStmt = $conn->prepare("SELECT * FROM likes WHERE likedBy = ? AND likedSong = ?");
+    $checkStmt->bind_param("ii", $userId, $songId);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+    
+    $isLiked = $checkStmt->num_rows > 0;
+    $checkStmt->close();
+    
+    if ($isLiked) {
+        $stmt = $conn->prepare("DELETE FROM likes WHERE likedBy = ? AND likedSong = ?");
+        $stmt->bind_param("ii", $userId, $songId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            return ['success' => true, 'unliked' => true];
+        } else {
+            return ['success' => false];
+        }
+    } else {
+        $stmt = $conn->prepare("INSERT INTO likes (likedBy, likedSong) VALUES (?, ?)");
+        $stmt->bind_param("ii", $userId, $songId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            return ['success' => true, 'liked' => true];
+        } else {
+            return ['success' => false];
+        }
+    }
+}
 
 function getAllSongs($conn, $userId = null) {
+    $currentUserId = null;
+    $user = getCurrentUser($conn);
+    if ($user) {
+        $currentUserId = $user['userId'];
+    }
+    
     if ($userId) {
         
-        $stmt = $conn->prepare("SELECT s.*, u.username as uploadedByUsername 
-                                FROM songs s 
-                                JOIN users u ON s.uploadedBy = u.userId 
-                                WHERE s.uploadedBy = ? 
-                                ORDER BY s.datePosted DESC");
-
-        $stmt->bind_param("i", $userId);
+        $stmt = $conn->prepare("
+            SELECT s.*, u.username as uploadedByUsername,
+                COUNT(DISTINCT l.likedBy) as likeCount,
+                CASE WHEN myLike.likedBy IS NOT NULL THEN 1 ELSE 0 END as isLiked
+            FROM songs s 
+            JOIN users u ON s.uploadedBy = u.userId 
+            LEFT JOIN likes l ON l.likedSong = s.songId
+            LEFT JOIN likes myLike ON myLike.likedSong = s.songId AND myLike.likedBy = ?
+            WHERE s.uploadedBy = ? 
+            GROUP BY s.songId
+            ORDER BY s.datePosted DESC
+        ");
+        
+        $stmt->bind_param("ii", $currentUserId, $userId);
     } else {
         
-        $stmt = $conn->prepare("SELECT s.*, u.username as uploadedByUsername 
-                                FROM songs s 
-                                JOIN users u ON s.uploadedBy = u.userId 
-                                ORDER BY s.datePosted DESC");
+        $stmt = $conn->prepare("
+            SELECT s.*, u.username as uploadedByUsername,
+                COUNT(l.likedBy) as likeCount,
+                CASE WHEN myLike.likedBy IS NOT NULL THEN 1 ELSE 0 END as isLiked
+            FROM songs s 
+            JOIN users u ON s.uploadedBy = u.userId 
+            LEFT JOIN likes l ON l.likedSong = s.songId
+            LEFT JOIN likes myLike ON myLike.likedSong = s.songId AND myLike.likedBy = ?
+            GROUP BY s.songId
+            ORDER BY s.datePosted DESC
+        ");
+        
+        $stmt->bind_param("i", $currentUserId);
     }
     
     if (!$stmt) {
         return null;
     }
     
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $songs = [];
+    while ($row = $result->fetch_assoc()) {
+        $songs[] = $row;
+    }
+    
+    $stmt->close();
+    return $songs;
+}
+
+function getCurrentUserLikedSongs($conn) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return null;
+    }
+    
+    $currentUserId = $user['userId'];
+    
+    $stmt = $conn->prepare("
+        SELECT s.*, u.username as uploadedByUsername,
+            COUNT(DISTINCT l.likedBy) as likeCount,
+            CASE WHEN myLike.likedBy IS NOT NULL THEN 1 ELSE 0 END as isLiked
+        FROM songs s 
+        JOIN users u ON s.uploadedBy = u.userId 
+        INNER JOIN likes liked ON liked.likedSong = s.songId
+        LEFT JOIN likes l ON l.likedSong = s.songId
+        LEFT JOIN likes myLike ON myLike.likedSong = s.songId AND myLike.likedBy = ?
+        WHERE liked.likedBy = ?
+        GROUP BY s.songId
+        ORDER BY liked.likedBy DESC, s.datePosted DESC
+    ");
+    
+    if (!$stmt) {
+        return null;
+    }
+    
+    $stmt->bind_param("ii", $currentUserId, $currentUserId);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -281,6 +406,42 @@ function getCurrentUserSongs($conn) {
     }
     
     return getAllSongs($conn, $user['userId']);
+}
+
+function getAbsolutelyAllSongs($conn) {
+    $currentUserId = null;
+    $user = getCurrentUser($conn);
+    if ($user) {
+        $currentUserId = $user['userId'];
+    }
+    
+    $stmt = $conn->prepare("
+        SELECT s.*, u.username as uploadedByUsername,
+            COUNT(l.likedBy) as likeCount,
+            CASE WHEN myLike.likedBy IS NOT NULL THEN 1 ELSE 0 END as isLiked
+        FROM songs s 
+        JOIN users u ON s.uploadedBy = u.userId 
+        LEFT JOIN likes l ON l.likedSong = s.songId
+        LEFT JOIN likes myLike ON myLike.likedSong = s.songId AND myLike.likedBy = ?
+        GROUP BY s.songId
+        ORDER BY s.datePosted DESC
+    ");
+    
+    if (!$stmt) {
+        return null;
+    }
+    
+    $stmt->bind_param("i", $currentUserId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $songs = [];
+    while ($row = $result->fetch_assoc()) {
+        $songs[] = $row;
+    }
+    
+    $stmt->close();
+    return $songs;
 }
 
 ?>

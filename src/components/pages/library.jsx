@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../../styles/library.css";
 import SongCard from "../other/song_card";
 
-export default function Library({ onNavigate, transitioning }) {
+export default function Library({ onNavigate, transitioning, playingSongData, setPlayingSongData }) {
     const [userData, setUserData] = useState({
         loggedIn: false,
         username: "",
@@ -10,6 +10,7 @@ export default function Library({ onNavigate, transitioning }) {
     });
 
     const [userSongs, setUserSongs] = useState([]);
+    const [likedSongs, setLikedSongs] = useState([]);
 
     async function getUserData() {
         try {
@@ -71,9 +72,31 @@ export default function Library({ onNavigate, transitioning }) {
         }
     }
 
+    async function getLikedSongs() {
+        try {
+
+            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_liked_songs.php");
+
+            const data = await response.json();
+
+            if (data.error) {
+                console.log("Failed to fetch songs");
+            }
+            if (data.songs) {
+                setLikedSongs(data.songs);
+            }
+
+        }
+        catch (error) {
+            console.error('Fetch error:', error);
+            throw error;
+        }
+    }
+
     useEffect(function() {
         getUserData();
         getUserSongs();
+        getLikedSongs();
     }, []);
 
     return (
@@ -88,7 +111,21 @@ export default function Library({ onNavigate, transitioning }) {
                 <h1> LIKED SONGS </h1>
             </div>
             <div className="liked-songs">
-
+                {
+                    !likedSongs.length ? "" :
+                    
+                    (
+                        likedSongs.map(song => (
+                            <SongCard 
+                                songId={song.songId} 
+                                songName={song.songName} 
+                                pathToCover={song.pathToCover}
+                                setPlayingSongData={setPlayingSongData}
+                                playingSongData={playingSongData}
+                            />
+                        ))
+                    )
+                }
             </div>
 
             <div className="posted-songs-label">
@@ -102,10 +139,10 @@ export default function Library({ onNavigate, transitioning }) {
                         userSongs.map(song => (
                             <SongCard 
                                 songId={song.songId} 
-                                songName={song.songName} 
-                                artist={song.artist} 
+                                songName={song.songName}
                                 pathToCover={song.pathToCover}
-                                pathToSong={song.pathToSong}
+                                playingSongData={playingSongData}
+                                setPlayingSongData={setPlayingSongData}
                             />
                         ))
                     )

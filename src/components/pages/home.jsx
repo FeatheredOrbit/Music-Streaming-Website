@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import "../../styles/home.css";
+import SongCard from "../other/song_card";
 
-export default function Home({ onNavigate, transitioning }) {
+export default function Home({ onNavigate, transitioning, playingSongData, setPlayingSongData }) {
     const [userData, setUserData] = useState({
         loggedIn: false,
         username: "",
         profilePicture: ""
     });
+
+    const [songs, setSongs] = useState([]);
 
     async function getUserData() {
         try {
@@ -47,12 +50,56 @@ export default function Home({ onNavigate, transitioning }) {
         }
     }
 
+    async function getAllSongs() {
+        try {
+
+            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/get_all_songs.php");
+
+            const data = await response.json();
+
+            if (data.error) {
+                console.log("Failed to fetch songs");
+            }
+            if (data.songs) {
+                setSongs(data.songs);
+            }
+
+        }
+        catch (error) {
+            console.error('Fetch error:', error);
+            throw error;
+        }
+    }
+
     useEffect(function() {
         getUserData();
+        getAllSongs();
     }, []);
 
     return (
         <div>
+
+            <div className="all-songs-label">
+                <h1> ALL SONGS </h1>
+            </div>
+
+            <div className="all-songs">
+                {
+                    !songs.length ? "" : 
+
+                    (
+                        songs.map(song => (
+                            <SongCard 
+                                songId={song.songId} 
+                                songName={song.songName} 
+                                pathToCover={song.pathToCover}    
+                                playingSongData={playingSongData}  
+                                setPlayingSongData={setPlayingSongData}                              
+                            />
+                        ))
+                    )
+                }
+            </div>
 
             <img className="button-pillar" src="assets/shared/foreground/button_pillar_shadowless.png" />
             <img className="background" src="assets/shared/background/background.png" />

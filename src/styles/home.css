@@ -1,0 +1,60 @@
+.all-songs-label {
+    position: absolute;
+    z-index: 3;
+
+    top: 31.5%;
+    left: 15%;
+
+    width: 22.5%;
+    height: 8%;
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.all-songs {
+    position: absolute;
+    z-index: 3;
+
+    top: 40%;
+    left: 50%;
+
+    width: 80%;
+    height: 22%;
+
+    transform: translateX(-50%);
+
+    background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
+    background-size: 100% 100%;  
+    background-position: center;
+    background-repeat: no-repeat;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 2%;
+
+    padding: 0 2%;
+    
+    overflow-x: auto; 
+}

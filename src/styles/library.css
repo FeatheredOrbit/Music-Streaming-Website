@@ -49,11 +49,9 @@
     z-index: 3;
 
     top: 40%;
-    left: 50%;
+    left: 7.5%;
 
-    transform: translateX(-50%);
-
-    width: 85%;
+    width: 72.5%;
     height: 22%;
 
     background-image: url("assets/shared/foreground/button_pillar_shadowless.png");
@@ -69,6 +67,15 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 2%;
+
+    padding: 0 2%;
+    
+    overflow-x: auto; 
 }
 
 .posted-songs-label {
@@ -76,7 +83,7 @@
     z-index: 3;
 
     top: 66%;
-    left: 17.5%;
+    left: 15%;
 
     width: 25%;
     height: 8%;
@@ -113,12 +120,19 @@
     image-rendering: crisp-edges;
     image-rendering: pixelated;
 
+    font-family: "Rye";
+    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
     display: flex;
     justify-content: flex-start; 
     align-items: center;
-    gap: 10px;
+    gap: 2%;
 
-    padding: 0 15px;
+    padding: 0 2%;
     
     overflow-x: auto; 
 }
@@ -127,7 +141,7 @@
     position: absolute;
 
     top: 85.5%;
-    left: 87.5%;
+    left: 88%;
 
     width: 6%;
     aspect-ratio: 1 / 1;
@@ -138,5 +152,5 @@
 .new-button:hover {
     content: url(assets/shared/buttons/new/hover.png);
 
-    width: 8%;
+    width: 7%;
 }

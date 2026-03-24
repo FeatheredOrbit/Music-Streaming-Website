@@ -150,3 +150,22 @@
 
     width: 6%;
 }
+
+.delete-account-button {
+    position: absolute;
+
+    bottom: 14%;
+    left: 12.5%;
+
+    aspect-ratio: 1 / 1;
+
+    width: 5%;
+
+    transform: translate(-50%, 50%);
+}
+
+.delete-account-button:hover {
+    content: url(assets/shared/buttons/delete/hover.png);
+
+    width: 6%;
+}

@@ -7,11 +7,16 @@ import Login from './pages/login';
 import Account from './pages/account';
 import Library from './pages/library';
 import SongPosting from './pages/song_posting';
+import SongOverlay from './other/song_overlay';
 
 export default function App() {
   const navigate = useNavigate();
 
   const [transitioning, setTransitioning] = React.useState(false);
+
+  const [playingSongData, setPlayingSongData] = React.useState({
+    songId: ""
+  });
 
   const introDelay = 30;
 
@@ -125,22 +130,42 @@ export default function App() {
     <>
 
       <div style={{ overflow: "hidden" }}>
-          <img className="intro intro-shadow" ref={introRef} />
-          <img className="intro" ref={introShadowlessRef} />
+        <img className="intro intro-shadow" ref={introRef} />
+        <img className="intro" ref={introShadowlessRef} />
       </div>
+
+      
+      {playingSongData.songId && (
+        <SongOverlay 
+          key={playingSongData.songId}
+          playingSongData={playingSongData} 
+          setPlayingSongData={setPlayingSongData}
+        />
+      )}
       
 
-        <Routes>
-          <Route path="/" element={<Home onNavigate={ onNavigate } transitioning={ transitioning } />} />
+      <Routes>
+        <Route path="/" 
+          element={<Home onNavigate={ onNavigate } 
+          transitioning={ transitioning } 
+          playingSongData={playingSongData} 
+          setPlayingSongData={setPlayingSongData} />} 
+        />
 
-          <Route path="/signup" element={<Signup onNavigate={ onNavigate } transitioning={ transitioning } />} />
-          <Route path="/login" element={<Login onNavigate={ onNavigate} transitioning={ transitioning } />} />
+        <Route path="/signup" element={<Signup onNavigate={ onNavigate } transitioning={ transitioning } />} />
+        <Route path="/login" element={<Login onNavigate={ onNavigate} transitioning={ transitioning } />} />
 
-          <Route path="/library" element={<Library onNavigate={ onNavigate } transitioning={ transitioning } />} />
-          <Route path="/song-posting" element={<SongPosting onNavigate={ onNavigate } transitioning={ transitioning } />} />
+        <Route 
+          path="/library" 
+          element={<Library onNavigate={ onNavigate } 
+          transitioning={ transitioning } 
+          playingSongData={playingSongData}
+          setPlayingSongData={setPlayingSongData}/>}
+        />
+        <Route path="/song-posting" element={<SongPosting onNavigate={ onNavigate } transitioning={ transitioning } />} />
 
-          <Route path="/account" element={<Account onNavigate={ onNavigate } transitioning={ transitioning } />} />
-        </Routes>
+        <Route path="/account" element={<Account onNavigate={ onNavigate } transitioning={ transitioning } />} />
+      </Routes>
 
     </>
   );

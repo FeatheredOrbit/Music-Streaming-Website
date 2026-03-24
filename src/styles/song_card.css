@@ -1,8 +1,27 @@
 .song-card {
     position: relative;
 
-    width: 110px;
-    height: 140px;
+    width: 15%;
+    height: 80%;
+
+    transition: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(.21,.94,.59,2.33);
+
+    transform-origin: center;
+}
+
+.song-card[clicked="true"] {
+    outline-style: double;
+    outline-color: red;
+
+    color: white;
+}
+
+.song-card:hover {
+    transform: scale(1.08);
+
+    color: white;
 }
 
 .song-card-cover {

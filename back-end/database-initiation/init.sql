@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS likes (
 
     FOREIGN KEY (likedBy) REFERENCES users(userId)
         ON DELETE CASCADE 
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
     
     FOREIGN KEY (likedSong) REFERENCES songs(songId)
         ON DELETE CASCADE

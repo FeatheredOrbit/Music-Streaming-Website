@@ -5,7 +5,8 @@ const InputChangeType = {
     PFP : "pfp",
     USERNAME : "username",
     EXTRA_INFORMATION : "extra",
-    PASSWORD : "password"
+    PASSWORD : "password",
+    DELETE_ACCOUNT: "delete"
 }
 
 export default function Account({ onNavigate, transitioning }) {
@@ -363,6 +364,9 @@ export default function Account({ onNavigate, transitioning }) {
                     else if (request === InputChangeType.PASSWORD) {
                         changePassword();
                     }
+                    else if (request === InputChangeType.DELETE_ACCOUNT) {
+                        deleteAccount();
+                    }
 
                     return;
                 }
@@ -395,6 +399,35 @@ export default function Account({ onNavigate, transitioning }) {
         catch (error) {
             console.log("Logout error:", error);
             throw error;
+        }
+    }
+
+    async function deleteAccount() {
+        const response = confirm("Are you sure you want to delete your account? This action cannot be undone");
+
+        if (!response) {return};
+
+        try {
+            const response = await fetch("api/Music-Streaming-Website/back-end/scripts/session/delete_user.php");
+
+            const data = await response.json();
+
+            if (data.notLoggedIn) {
+                alert("The user is not logged in, back to the home page you go!");
+                onNavigate("/");
+            }
+
+            if (data.success) {
+                alert("Account succesfully deleted! enjoy not having an account");
+                onNavigate("/");
+            }
+            else {
+                alert("Failed to delete account");
+                return;
+            }
+        }
+        catch (error) {
+            console.log("Fetch error:", error);
         }
     }
 
@@ -439,6 +472,12 @@ export default function Account({ onNavigate, transitioning }) {
                     src="assets/shared/buttons/log_out/default.png" 
                     title="Log Out" 
                     onClick={() => {if (transitioning) {return;} logOutClicked()}}
+                />
+                <img 
+                    className="button delete-account-button" 
+                    src="assets/shared/buttons/delete/default.png" 
+                    title="Delete Account" 
+                    onClick={() => {if (transitioning) {return;} validatePassword(InputChangeType.DELETE_ACCOUNT)}}
                 />
             </div>
 
