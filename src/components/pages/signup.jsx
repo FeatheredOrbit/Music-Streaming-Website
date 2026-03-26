@@ -196,7 +196,7 @@ export default function Signup({ onNavigate, transitioning }) {
             />
             <img 
                 className="button account-button" 
-                has_profile_picture={(false).toString()}
+                has_pfp={(false).toString()}
                 title="Click to set up account" 
                 src="assets/shared/buttons/account/default.png" 
                 onClick={function() { if (!transitioning) { onNavigate("/signup") }}} 

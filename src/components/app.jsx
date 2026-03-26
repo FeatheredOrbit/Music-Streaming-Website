@@ -25,7 +25,7 @@ export default function App() {
     songId: ""
   });
 
-  // Milliseconds between each frame of the transition animation.
+  // Milliseconds * 10 between each frame of the transition animation.
   const introDelay = 30;
 
   // Sequence of images for the transition effect with a "shadow" overlay, if we can call it that.

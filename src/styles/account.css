@@ -49,6 +49,11 @@
     height: 50%;
 }
 
+.account-picture[has_pfp = "true"] {
+    outline-style: double;
+    outline-color: black;
+}
+
 .extra-information-container {
     position: absolute;
     left: 18.25%;

@@ -78,6 +78,11 @@
     transition-timing-function: cubic-bezier(.21,.94,.59,2.33);
 }
 
+.account-button[has_pfp="true"] {
+    outline-style: double;
+    outline-color: black;
+}
+
 @media(orientation: portrait) {
 .button-pillar {
     height: 35%;
@@ -143,14 +148,14 @@
     height: 6%;
 }
 
-.account-button[has_profile_picture="false"]:hover {
+.account-button[has_pfp="false"]:hover {
     content: url(assets/shared/buttons/account/hover.png);
 
     width: 12%;
     height: 6%;
 }
 
-.account-button[has_profile_picture="true"]:hover {
+.account-button[has_pfp="true"]:hover {
     width: 12%;
     height: 6%;
 }
@@ -180,7 +185,7 @@
     left: 45%;
 
     width: 5%;
-    height: 5%;
+    height: 4.5%;
 
     transform: translate(-50%, -50%);
 }
@@ -223,14 +228,14 @@
     height: 6%;
 }
 
-.account-button[has_profile_picture="false"]:hover {
+.account-button[has_pfp="false"]:hover {
     content: url(assets/shared/buttons/account/hover.png);
 
     width: 6%;
     height: 6%;
 }
 
-.account-button[has_profile_picture="true"]:hover {
+.account-button[has_pfp="true"]:hover {
     width: 6%;
     height: 6%;
 }
