@@ -400,13 +400,28 @@ function getAllSongs($conn, $userId = null) {
     return $songs;
 }
 
+// Function to get data about a specific song.
 function getSpecificSong($conn, $songId) {
     $user = getCurrentUser($conn);
     
     if (!$user) {
-        return null;
+        $stmt = $conn->prepare("
+            SELECT s.*, u.username as uploadedByUsername,
+                COUNT(l.likedBy) as likeCount,
+                0 as isLiked
+            FROM songs s 
+            JOIN users u ON s.uploadedBy = u.userId 
+            LEFT JOIN likes l ON l.likedSong = s.songId
+            WHERE s.songId = ?
+            GROUP BY s.songId
+        ");
+        
+        $stmt->bind_param("i", $songId);
+        $stmt->execute();
+        
+        return $stmt->get_result();
     }
-
+    
     $stmt = $conn->prepare("
             SELECT s.*, u.username as uploadedByUsername,
                 COUNT(l.likedBy) as likeCount,
