@@ -18,6 +18,5 @@ if ($song = getSpecificSong($conn, $songId)->fetch_assoc()) {
     echo json_encode(["error" => "song_not_found"]);
 }
 
-$stmt->close();
 $conn->close();
 ?>
