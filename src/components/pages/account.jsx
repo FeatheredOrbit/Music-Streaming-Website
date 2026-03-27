@@ -121,7 +121,7 @@ export default function Account({ onNavigate, transitioning }) {
             if (data.pathToProfilePicture) {
                 setUserData(prev => ({
                     ...prev,
-                    profilePicture: data.profilePicture
+                    profilePicture: data.pathToProfilePicture
                 }));
 
                 alert("Profile picture successfully changed! Yippie!")
