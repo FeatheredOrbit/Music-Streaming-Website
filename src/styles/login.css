@@ -43,9 +43,9 @@
 .move-to-signup {
     position: absolute;
     z-index: 3;
-    right: 10%;
+    right: 8%;
     top: 40%;
-    width: 15%;
+    width: 18%;
     height: 12.5%;
     padding: 2rem;
     box-sizing: border-box;
@@ -58,7 +58,7 @@
     image-rendering: pixelated;
 
     font-family: "Rye";
-    font-size: clamp(0.8rem, 0.95vw + 0.8vh, 1.5rem);;
+    font-size: clamp(0.8rem, 0.95vw + 0.7vh, 1.5rem);;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -170,7 +170,7 @@
     grid-column: 2 / 3;
     grid-row: 2 / 4;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
     width: 100%;
     margin-left: 0.5rem;
@@ -183,10 +183,6 @@
     padding: 0;
     width: 90%; 
     height: 90%; 
-    max-width: 180px;
-    max-height: 180px;
-    min-width: 80px;
-    min-height: 80px;
     transition: transform 0.2s ease;
     display: flex;
     align-items: center;

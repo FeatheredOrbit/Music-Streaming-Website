@@ -400,6 +400,31 @@ function getAllSongs($conn, $userId = null) {
     return $songs;
 }
 
+function getSpecificSong($conn, $songId) {
+    $user = getCurrentUser($conn);
+    
+    if (!$user) {
+        return null;
+    }
+
+    $stmt = $conn->prepare("
+            SELECT s.*, u.username as uploadedByUsername,
+                COUNT(l.likedBy) as likeCount,
+                CASE WHEN myLike.likedBy IS NOT NULL THEN 1 ELSE 0 END as isLiked
+            FROM songs s 
+            JOIN users u ON s.uploadedBy = u.userId 
+            LEFT JOIN likes l ON l.likedSong = s.songId
+            LEFT JOIN likes myLike ON myLike.likedSong = s.songId AND myLike.likedBy = ?
+            WHERE s.songId = ?
+            GROUP BY s.songId
+    ");
+
+    $stmt->bind_param("ii", $user["userId"], $songId);
+    $stmt->execute();
+    
+    return $stmt->get_result();
+}
+
 // Retrieves all songs liked by the current user.
 function getCurrentUserLikedSongs($conn) {
     $user = getCurrentUser($conn);

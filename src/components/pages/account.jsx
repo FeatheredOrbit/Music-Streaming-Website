@@ -213,7 +213,7 @@ export default function Account({ onNavigate, transitioning }) {
 
     // Updates the extra information field for the user profile.
     async function changeExtraInfo() {
-        const information = prompt("Insert new information:");
+        const information = prompt("Insert new bio:");
 
         if (information === null) {
             return;
@@ -237,11 +237,11 @@ export default function Account({ onNavigate, transitioning }) {
                     extra: information
                 }));
 
-                alert("Information successfully changed! Yippie!");
+                alert("Bio successfully changed! Yippie!");
                 return;
             }
             else {
-                alert("Failed to update information");
+                alert("Failed to update bio");
                 return;
             }
 
@@ -472,7 +472,7 @@ export default function Account({ onNavigate, transitioning }) {
                 </div>
 
                 <div className="extra-information-container" onClick={() => {if (transitioning) {return;} validatePassword(InputChangeType.EXTRA_INFORMATION)}}>
-                    <p> {userData.extra ? userData.extra : "No information on this user"} </p>
+                    <p> {userData.extra ? userData.extra : "This user has no bio"} </p>
                 </div>  
 
                 <img 
@@ -512,7 +512,7 @@ export default function Account({ onNavigate, transitioning }) {
                 has_pfp={(userData.profilePicture ? true : false).toString()} 
                 title={userData.loggedIn ? userData.username : "Click to set up account"} 
                 src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
-                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} 
+                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/login") }}} 
             />
             <img 
                 className="button library-button" 

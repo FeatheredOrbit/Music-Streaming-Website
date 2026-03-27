@@ -24,8 +24,8 @@
     z-index: 3;
     left: 50%;
     top: 35%;
-    width: 80%;
-    height: 60%;
+    width: 30%;
+    height: 30%;
     min-height: 350px; 
     min-width: 650px; 
     transform: translateX(-50%);
@@ -45,13 +45,13 @@
     left: 0%;
     top: 0%;
 
-    width: 17.5%;
+    width: 25%;
     height: 50%;
 }
 
 .song-name-container {
     position: absolute;
-    left: 18.25%;
+    left: 26%;
     top: 5%;
 
     line-height: 0.1;
@@ -72,7 +72,7 @@
 
 .artist-container {
     position: absolute;
-    left: 18.25%;
+    left: 26%;
     top: 17.5%;
 
     line-height: 0.1;
@@ -120,11 +120,11 @@
     position: absolute;
 
     bottom: 14%;
-    right: 5%;
+    right: 6%;
 
     aspect-ratio: 1 / 1;
 
-    width: 5%;
+    width: 8%;
 
     transform: translate(50%, 50%);
 }

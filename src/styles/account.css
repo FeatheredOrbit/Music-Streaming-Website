@@ -121,7 +121,7 @@
 .change-password-button {
     position: absolute;
 
-    bottom: 14%;
+    bottom: 40%;
     right: 5%;
 
     aspect-ratio: 1 / 1;
@@ -160,13 +160,13 @@
     position: absolute;
 
     bottom: 14%;
-    left: 12.5%;
+    right: 5%;
 
     aspect-ratio: 1 / 1;
 
     width: 5%;
 
-    transform: translate(-50%, 50%);
+    transform: translate(50%, 50%);
 }
 
 .delete-account-button:hover {

@@ -199,7 +199,7 @@ export default function Signup({ onNavigate, transitioning }) {
                 has_pfp={(false).toString()}
                 title="Click to set up account" 
                 src="assets/shared/buttons/account/default.png" 
-                onClick={function() { if (!transitioning) { onNavigate("/signup") }}} 
+                onClick={function() { if (!transitioning) { onNavigate("/login") }}} 
             />
             <img 
                 className="button library-button" 

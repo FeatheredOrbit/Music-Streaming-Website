@@ -174,7 +174,7 @@ export default function Library({ onNavigate, transitioning, playingSongData, se
                 has_pfp={(userData.profilePicture ? true : false).toString()}
                 title={userData.loggedIn ? userData.username : "Click to set up account"} 
                 src={userData.profilePicture ? `api/${userData.profilePicture}` : "assets/shared/buttons/account/default.png"}
-                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/signup") }}} 
+                onClick={function() { if (!transitioning) { onNavigate(userData.loggedIn ? "/account" : "/login") }}} 
             />
             <img 
                 className="button library-button" 

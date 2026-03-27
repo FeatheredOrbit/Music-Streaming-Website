@@ -166,10 +166,6 @@
     padding: 0;
     width: 90%; 
     height: 90%; 
-    max-width: 180px;
-    max-height: 180px;
-    min-width: 80px;
-    min-height: 80px;
     transition: transform 0.2s ease;
     display: flex;
     align-items: center;
