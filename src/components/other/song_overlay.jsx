@@ -42,8 +42,6 @@ export default function SongOverlay({onNavigate, playingSongData, setPlayingSong
                     body: dataToSend
                 });
 
-                console.log(response.text());
-
                 const data = await response.json();
                 
                 if (data.success) {
